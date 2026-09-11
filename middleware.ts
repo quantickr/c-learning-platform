@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Простое in-memory rate limiting (для production используйте Redis)
+// Простое in-memory rate limiting (для production используйте Redis/Upstash)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const MAX_MAP_SIZE = 10000; // Защита от memory exhaustion
 
 // Очистка старых записей каждые 5 минут
 setInterval(() => {
@@ -14,11 +15,53 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 
+// Валидация IP адреса
+function isValidIP(ip: string): boolean {
+  const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+  const ipv6Regex = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$|^::(?:[0-9a-fA-F]{1,4}:){0,6}[0-9a-fA-F]{1,4}$|^[0-9a-fA-F]{1,4}::(?:[0-9a-fA-F]{1,4}:){0,5}[0-9a-fA-F]{1,4}$/;
+
+  return ipv4Regex.test(ip) || ipv6Regex.test(ip);
+}
+
+// Получение IP с защитой от spoofing
+function getClientIP(request: NextRequest): string {
+  // В production за reverse proxy (Vercel, Cloudflare) можно доверять x-forwarded-for
+  // Для самостоятельного деплоя - настройте trusted proxies
+  const forwardedFor = request.headers.get('x-forwarded-for');
+
+  if (forwardedFor) {
+    const ips = forwardedFor.split(',').map(ip => ip.trim());
+    const clientIP = ips[0]; // Первый IP - клиент
+
+    // Валидируем IP перед использованием
+    if (isValidIP(clientIP)) {
+      return clientIP;
+    }
+  }
+
+  // Fallback: x-real-ip
+  const realIP = request.headers.get('x-real-ip');
+  if (realIP && isValidIP(realIP)) {
+    return realIP;
+  }
+
+  // Последний fallback - используем "anonymous" вместо невалидного IP
+  return 'anonymous';
+}
+
 function rateLimit(ip: string, limit: number, windowMs: number): boolean {
   const now = Date.now();
   const record = rateLimitMap.get(ip);
 
   if (!record || now > record.resetTime) {
+    // Защита от memory exhaustion - LRU eviction при превышении лимита
+    if (rateLimitMap.size >= MAX_MAP_SIZE) {
+      const oldestKey = rateLimitMap.keys().next().value;
+      if (oldestKey) {
+        rateLimitMap.delete(oldestKey);
+      }
+    }
+
     rateLimitMap.set(ip, { count: 1, resetTime: now + windowMs });
     return true;
   }
@@ -34,9 +77,7 @@ function rateLimit(ip: string, limit: number, windowMs: number): boolean {
 export function middleware(request: NextRequest) {
   // Rate limiting только для API чата
   if (request.nextUrl.pathname === '/api/chat') {
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ||
-               request.headers.get('x-real-ip') ||
-               'unknown';
+    const ip = getClientIP(request);
 
     // 10 запросов в минуту на IP
     if (!rateLimit(ip, 10, 60 * 1000)) {
