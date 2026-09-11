@@ -1,0 +1,20 @@
+export default {
+  $schema: "https://railway.app/railway.schema.json",
+  services: {
+    "c-learning-platform": {
+      type: "service",
+      source: {
+        repo: "quantickr/c-learning-platform"
+      },
+      build: {
+        builder: "DOCKERFILE",
+        dockerfilePath: "Dockerfile"
+      },
+      deploy: {
+        numReplicas: 1,
+        restartPolicyType: "ON_FAILURE",
+        restartPolicyMaxRetries: 10
+      }
+    }
+  }
+};
