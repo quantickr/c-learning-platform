@@ -98,13 +98,13 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
                     <div key={index} className="bg-gray-50 p-3 rounded border">
                       <div className="text-sm mb-1">
                         <span className="font-semibold text-gray-900">Вход:</span>
-                        <code className="ml-2 bg-white px-2 py-1 rounded text-xs">
+                        <code className="ml-2 bg-white px-2 py-1 rounded text-xs text-gray-900">
                           {example.input}
                         </code>
                       </div>
                       <div className="text-sm">
                         <span className="font-semibold text-gray-900">Выход:</span>
-                        <code className="ml-2 bg-white px-2 py-1 rounded text-xs">
+                        <code className="ml-2 bg-white px-2 py-1 rounded text-xs text-gray-900">
                           {example.output}
                         </code>
                       </div>
