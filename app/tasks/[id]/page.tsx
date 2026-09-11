@@ -141,6 +141,8 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
 
               <CodeEditor
                 initialCode={task.template}
+                taskId={task.id}
+                mainFunction={task.mainFunction}
                 tests={task.tests}
               />
 
@@ -148,7 +150,7 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
                 <h3 className="font-bold text-gray-900 mb-2">💡 Советы:</h3>
                 <ul className="text-sm text-gray-700 space-y-1 list-disc list-inside">
                   <li>Напишите код внутри предоставленной функции</li>
-                  <li>Не изменяйте функцию main() - она используется для тестирования</li>
+                  <li>Функция main() добавляется автоматически при проверке</li>
                   <li>После написания кода нажмите «Запустить тесты»</li>
                   <li>Обратите внимание на граничные случаи (ноль, отрицательные числа, большие значения)</li>
                 </ul>

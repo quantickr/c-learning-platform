@@ -29,13 +29,13 @@ export default function TheoryPage() {
           {/* Боковая навигация */}
           <aside className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-lg p-4 sticky top-4">
-              <h2 className="font-bold text-lg mb-4">Содержание</h2>
+              <h2 className="font-bold text-lg mb-4 text-gray-900">Содержание</h2>
               <nav className="space-y-2">
                 {theorySections.map((section) => (
                   <a
                     key={section.id}
                     href={`#${section.id}`}
-                    className="block px-3 py-2 rounded hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                    className="block px-3 py-2 rounded text-gray-900 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                   >
                     {section.title}
                   </a>
@@ -66,7 +66,7 @@ export default function TheoryPage() {
                     {section.title}
                   </h2>
 
-                  <div className="prose prose-lg max-w-none">
+                  <div className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-900 prose-strong:text-gray-900 prose-ul:text-gray-900 prose-li:text-gray-900">
                     <ReactMarkdown
                       components={{
                         code(props) {
@@ -81,11 +81,18 @@ export default function TheoryPage() {
                               {String(children).replace(/\n$/, '')}
                             </SyntaxHighlighter>
                           ) : (
-                            <code className={className} {...rest}>
+                            <code className="bg-gray-100 text-gray-900 px-1 py-0.5 rounded text-sm" {...rest}>
                               {children}
                             </code>
                           );
                         },
+                        h1: ({ children }) => <h1 className="text-3xl font-bold text-gray-900 mb-4">{children}</h1>,
+                        h2: ({ children }) => <h2 className="text-2xl font-bold text-gray-900 mb-3 mt-6">{children}</h2>,
+                        h3: ({ children }) => <h3 className="text-xl font-bold text-gray-900 mb-2 mt-4">{children}</h3>,
+                        p: ({ children }) => <p className="text-gray-900 mb-4 leading-relaxed">{children}</p>,
+                        ul: ({ children }) => <ul className="list-disc list-inside text-gray-900 space-y-2 mb-4">{children}</ul>,
+                        li: ({ children }) => <li className="text-gray-900">{children}</li>,
+                        strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
                       }}
                     >
                       {section.content}

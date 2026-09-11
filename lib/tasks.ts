@@ -8,6 +8,7 @@ export interface Task {
     output: string;
   }[];
   template: string;
+  mainFunction: string; // main() для тестирования (скрыта от пользователя)
   tests: TestCase[];
   hints?: string[];
 }
@@ -33,8 +34,8 @@ export const tasks: Task[] = [
 int is_even(int n) {
     // Ваш код здесь
 
-}
-
+}`,
+    mainFunction: `
 int main() {
     int n;
     scanf("%d", &n);
@@ -47,7 +48,17 @@ int main() {
       { input: "0", expectedOutput: "1" },
       { input: "-2", expectedOutput: "1" },
       { input: "-3", expectedOutput: "0" },
-      { input: "1000000", expectedOutput: "1" }
+      { input: "1000000", expectedOutput: "1" },
+      { input: "1000001", expectedOutput: "0" },
+      { input: "2", expectedOutput: "1" },
+      { input: "1", expectedOutput: "0" },
+      { input: "-100", expectedOutput: "1" },
+      { input: "-999", expectedOutput: "0" },
+      { input: "9999", expectedOutput: "0" },
+      { input: "10000", expectedOutput: "1" },
+      { input: "-1", expectedOutput: "0" },
+      { input: "777", expectedOutput: "0" },
+      { input: "888", expectedOutput: "1" }
     ]
   },
   {
@@ -64,7 +75,8 @@ int max_of_three(int a, int b, int c) {
     // Ваш код здесь
 
 }
-
+`,
+    mainFunction: `
 int main() {
     int a, b, c;
     scanf("%d %d %d", &a, &b, &c);
@@ -76,7 +88,15 @@ int main() {
       { input: "10 5 7", expectedOutput: "10" },
       { input: "3 9 9", expectedOutput: "9" },
       { input: "-1 -5 -3", expectedOutput: "-1" },
-      { input: "0 0 0", expectedOutput: "0" }
+      { input: "0 0 0", expectedOutput: "0" },
+      { input: "100 200 150", expectedOutput: "200" },
+      { input: "-10 -20 -30", expectedOutput: "-10" },
+      { input: "1 1 1", expectedOutput: "1" },
+      { input: "50 50 49", expectedOutput: "50" },
+      { input: "-5 0 5", expectedOutput: "5" },
+      { input: "999 1000 998", expectedOutput: "1000" },
+      { input: "7 7 8", expectedOutput: "8" },
+      { input: "100 100 100", expectedOutput: "100" }
     ]
   },
   {
@@ -95,7 +115,8 @@ int sign(int n) {
     // Ваш код здесь
 
 }
-
+`,
+    mainFunction: `
 int main() {
     int n;
     scanf("%d", &n);
@@ -107,7 +128,12 @@ int main() {
       { input: "5", expectedOutput: "1" },
       { input: "0", expectedOutput: "0" },
       { input: "-1000", expectedOutput: "-1" },
-      { input: "1", expectedOutput: "1" }
+      { input: "1", expectedOutput: "1" },
+      { input: "-1", expectedOutput: "-1" },
+      { input: "100", expectedOutput: "1" },
+      { input: "-50", expectedOutput: "-1" },
+      { input: "999999", expectedOutput: "1" },
+      { input: "-999999", expectedOutput: "-1" }
     ]
   },
   {
@@ -125,7 +151,8 @@ int absolute(int n) {
     // Ваш код здесь
 
 }
-
+`,
+    mainFunction: `
 int main() {
     int n;
     scanf("%d", &n);
@@ -136,7 +163,15 @@ int main() {
       { input: "-7", expectedOutput: "7" },
       { input: "5", expectedOutput: "5" },
       { input: "0", expectedOutput: "0" },
-      { input: "-2147483647", expectedOutput: "2147483647" }
+      { input: "-2147483647", expectedOutput: "2147483647" },
+      { input: "100", expectedOutput: "100" },
+      { input: "-100", expectedOutput: "100" },
+      { input: "1", expectedOutput: "1" },
+      { input: "-1", expectedOutput: "1" },
+      { input: "9999", expectedOutput: "9999" },
+      { input: "-9999", expectedOutput: "9999" },
+      { input: "42", expectedOutput: "42" },
+      { input: "-42", expectedOutput: "42" }
     ]
   },
   {
@@ -154,7 +189,8 @@ int is_triangle(int a, int b, int c) {
     // Ваш код здесь
 
 }
-
+`,
+    mainFunction: `
 int main() {
     int a, b, c;
     scanf("%d %d %d", &a, &b, &c);
@@ -166,7 +202,17 @@ int main() {
       { input: "3 2 5", expectedOutput: "0" },
       { input: "1 1 1", expectedOutput: "1" },
       { input: "10 5 3", expectedOutput: "0" },
-      { input: "5 12 13", expectedOutput: "1" }
+      { input: "5 12 13", expectedOutput: "1" },
+      { input: "1 2 3", expectedOutput: "0", description: "1+2=3, сумма двух сторон равна третьей" },
+      { input: "2 2 2", expectedOutput: "1" },
+      { input: "7 24 25", expectedOutput: "1" },
+      { input: "1 1 10", expectedOutput: "0" },
+      { input: "6 8 10", expectedOutput: "1" },
+      { input: "100 100 100", expectedOutput: "1" },
+      { input: "1 10 100", expectedOutput: "0" },
+      { input: "5 5 9", expectedOutput: "1" },
+      { input: "5 5 10", expectedOutput: "0" },
+      { input: "3 4 7", expectedOutput: "0" }
     ]
   },
   {
@@ -184,7 +230,8 @@ void grade_class(int score) {
     // Ваш код здесь
 
 }
-
+`,
+    mainFunction: `
 int main() {
     int score;
     scanf("%d", &score);
@@ -197,7 +244,17 @@ int main() {
       { input: "65", expectedOutput: "удовлетворительно" },
       { input: "45", expectedOutput: "неудовлетворительно" },
       { input: "100", expectedOutput: "отлично" },
-      { input: "0", expectedOutput: "неудовлетворительно" }
+      { input: "0", expectedOutput: "неудовлетворительно" },
+      { input: "90", expectedOutput: "отлично" },
+      { input: "89", expectedOutput: "хорошо" },
+      { input: "70", expectedOutput: "хорошо" },
+      { input: "69", expectedOutput: "удовлетворительно" },
+      { input: "50", expectedOutput: "удовлетворительно" },
+      { input: "49", expectedOutput: "неудовлетворительно" },
+      { input: "95", expectedOutput: "отлично" },
+      { input: "75", expectedOutput: "хорошо" },
+      { input: "55", expectedOutput: "удовлетворительно" },
+      { input: "25", expectedOutput: "неудовлетворительно" }
     ]
   },
   {
@@ -215,7 +272,8 @@ double euclidean_distance(double x1, double y1, double x2, double y2) {
     // Ваш код здесь
 
 }
-
+`,
+    mainFunction: `
 int main() {
     double x1, y1, x2, y2;
     scanf("%lf %lf %lf %lf", &x1, &y1, &x2, &y2);
@@ -226,7 +284,14 @@ int main() {
       { input: "0 0 3 4", expectedOutput: "5.000000" },
       { input: "1 1 4 5", expectedOutput: "5.000000" },
       { input: "0 0 0 0", expectedOutput: "0.000000" },
-      { input: "-3 -4 0 0", expectedOutput: "5.000000" }
+      { input: "-3 -4 0 0", expectedOutput: "5.000000" },
+      { input: "1 2 4 6", expectedOutput: "5.000000" },
+      { input: "0 0 1 1", expectedOutput: "1.414214" },
+      { input: "-5 -5 5 5", expectedOutput: "14.142136" },
+      { input: "10 10 10 10", expectedOutput: "0.000000" },
+      { input: "3 4 6 8", expectedOutput: "5.000000" },
+      { input: "0 0 10 0", expectedOutput: "10.000000" },
+      { input: "0 0 0 10", expectedOutput: "10.000000" }
     ]
   },
   {
@@ -243,7 +308,8 @@ int manhattan_distance(int x1, int y1, int x2, int y2) {
     // Ваш код здесь
 
 }
-
+`,
+    mainFunction: `
 int main() {
     int x1, y1, x2, y2;
     scanf("%d %d %d %d", &x1, &y1, &x2, &y2);
@@ -254,7 +320,14 @@ int main() {
       { input: "1 2 4 6", expectedOutput: "7" },
       { input: "0 0 0 0", expectedOutput: "0" },
       { input: "-3 -4 3 4", expectedOutput: "14" },
-      { input: "5 5 5 5", expectedOutput: "0" }
+      { input: "5 5 5 5", expectedOutput: "0" },
+      { input: "0 0 10 10", expectedOutput: "20" },
+      { input: "1 1 1 1", expectedOutput: "0" },
+      { input: "-5 -5 5 5", expectedOutput: "20" },
+      { input: "10 20 30 40", expectedOutput: "40" },
+      { input: "0 0 5 0", expectedOutput: "5" },
+      { input: "0 0 0 5", expectedOutput: "5" },
+      { input: "100 100 200 200", expectedOutput: "200" }
     ]
   },
   {
@@ -271,7 +344,8 @@ double average_primes(int a, int b) {
     // Ваш код здесь
 
 }
-
+`,
+    mainFunction: `
 int main() {
     int a, b;
     scanf("%d %d", &a, &b);
@@ -282,7 +356,15 @@ int main() {
       { input: "0 10", expectedOutput: "4.250000", description: "Простые: 2,3,5,7 => (2+3+5+7)/4 = 4.25" },
       { input: "10 20", expectedOutput: "14.500000", description: "Простые: 11,13,17,19" },
       { input: "1 1", expectedOutput: "0.000000", description: "Нет простых чисел" },
-      { input: "2 2", expectedOutput: "2.000000" }
+      { input: "2 2", expectedOutput: "2.000000" },
+      { input: "1 10", expectedOutput: "4.250000" },
+      { input: "20 30", expectedOutput: "25.000000", description: "Простые: 23,29" },
+      { input: "0 5", expectedOutput: "3.333333", description: "Простые: 2,3,5" },
+      { input: "5 10", expectedOutput: "6.000000", description: "Простые: 5,7" },
+      { input: "11 11", expectedOutput: "11.000000" },
+      { input: "0 1", expectedOutput: "0.000000" },
+      { input: "2 10", expectedOutput: "4.750000", description: "Простые: 2,3,5,7" },
+      { input: "1 20", expectedOutput: "9.666667", description: "Простые: 2,3,5,7,11,13,17,19" }
     ],
     hints: [
       "Простые числа: числа больше 1, которые делятся только на 1 и на себя",
@@ -304,7 +386,8 @@ int count_multiples(int a, int b, int k) {
     // Ваш код здесь
 
 }
-
+`,
+    mainFunction: `
 int main() {
     int a, b, k;
     scanf("%d %d %d", &a, &b, &k);
@@ -315,7 +398,14 @@ int main() {
       { input: "1 10 2", expectedOutput: "5", description: "2,4,6,8,10" },
       { input: "5 15 3", expectedOutput: "4", description: "6,9,12,15" },
       { input: "1 10 1", expectedOutput: "10" },
-      { input: "10 10 5", expectedOutput: "1" }
+      { input: "10 10 5", expectedOutput: "1" },
+      { input: "1 20 5", expectedOutput: "4", description: "5,10,15,20" },
+      { input: "0 100 10", expectedOutput: "10", description: "0,10,20...100" },
+      { input: "1 100 7", expectedOutput: "14" },
+      { input: "5 50 4", expectedOutput: "12" },
+      { input: "1 1 1", expectedOutput: "1" },
+      { input: "2 20 2", expectedOutput: "10" },
+      { input: "11 19 3", expectedOutput: "3", description: "12,15,18" }
     ]
   },
   {
@@ -334,7 +424,8 @@ int is_leap_year(int year) {
     // Ваш код здесь
 
 }
-
+`,
+    mainFunction: `
 int main() {
     int year;
     scanf("%d", &year);
@@ -347,7 +438,16 @@ int main() {
       { input: "2024", expectedOutput: "1", description: "Делится на 4, не на 100" },
       { input: "2023", expectedOutput: "0", description: "Не делится на 4" },
       { input: "2100", expectedOutput: "0", description: "Делится на 100, но не на 400" },
-      { input: "2400", expectedOutput: "1", description: "Делится на 400" }
+      { input: "2400", expectedOutput: "1", description: "Делится на 400" },
+      { input: "2004", expectedOutput: "1" },
+      { input: "2001", expectedOutput: "0" },
+      { input: "1600", expectedOutput: "1" },
+      { input: "1700", expectedOutput: "0" },
+      { input: "1800", expectedOutput: "0" },
+      { input: "2020", expectedOutput: "1" },
+      { input: "2021", expectedOutput: "0" },
+      { input: "2200", expectedOutput: "0" },
+      { input: "2800", expectedOutput: "1" }
     ],
     hints: [
       "Год високосный если: (делится на 4 И НЕ делится на 100) ИЛИ (делится на 400)",
@@ -370,7 +470,8 @@ void season(int month) {
     // Ваш код здесь
 
 }
-
+`,
+    mainFunction: `
 int main() {
     int month;
     scanf("%d", &month);
@@ -383,7 +484,17 @@ int main() {
       { input: "7", expectedOutput: "лето" },
       { input: "10", expectedOutput: "осень" },
       { input: "13", expectedOutput: "некорректно" },
-      { input: "0", expectedOutput: "некорректно" }
+      { input: "0", expectedOutput: "некорректно" },
+      { input: "2", expectedOutput: "зима" },
+      { input: "12", expectedOutput: "зима" },
+      { input: "3", expectedOutput: "весна" },
+      { input: "5", expectedOutput: "весна" },
+      { input: "6", expectedOutput: "лето" },
+      { input: "8", expectedOutput: "лето" },
+      { input: "9", expectedOutput: "осень" },
+      { input: "11", expectedOutput: "осень" },
+      { input: "-1", expectedOutput: "некорректно" },
+      { input: "100", expectedOutput: "некорректно" }
     ]
   },
   {
@@ -402,7 +513,8 @@ void day_of_week(int day) {
     // Ваш код здесь
 
 }
-
+`,
+    mainFunction: `
 int main() {
     int day;
     scanf("%d", &day);
@@ -418,7 +530,10 @@ int main() {
       { input: "6", expectedOutput: "суббота" },
       { input: "7", expectedOutput: "воскресенье" },
       { input: "743", expectedOutput: "некорректно" },
-      { input: "0", expectedOutput: "некорректно" }
+      { input: "0", expectedOutput: "некорректно" },
+      { input: "8", expectedOutput: "некорректно" },
+      { input: "-1", expectedOutput: "некорректно" },
+      { input: "100", expectedOutput: "некорректно" }
     ]
   },
   {
@@ -437,7 +552,8 @@ int count_digits(int n) {
     // Используйте do-while!
 
 }
-
+`,
+    mainFunction: `
 int main() {
     int n;
     scanf("%d", &n);
@@ -449,7 +565,15 @@ int main() {
       { input: "7", expectedOutput: "1" },
       { input: "0", expectedOutput: "1" },
       { input: "-123", expectedOutput: "3" },
-      { input: "1000000", expectedOutput: "7" }
+      { input: "1000000", expectedOutput: "7" },
+      { input: "999", expectedOutput: "3" },
+      { input: "12345", expectedOutput: "5" },
+      { input: "1", expectedOutput: "1" },
+      { input: "-1", expectedOutput: "1" },
+      { input: "100", expectedOutput: "3" },
+      { input: "-9999", expectedOutput: "4" },
+      { input: "42", expectedOutput: "2" },
+      { input: "987654321", expectedOutput: "9" }
     ],
     hints: [
       "Используйте do-while для обработки каждой цифры",
@@ -472,7 +596,8 @@ int reverse_number(int n) {
     // Используйте do-while!
 
 }
-
+`,
+    mainFunction: `
 int main() {
     int n;
     scanf("%d", &n);
@@ -484,7 +609,17 @@ int main() {
       { input: "1000", expectedOutput: "1" },
       { input: "0", expectedOutput: "0" },
       { input: "-456", expectedOutput: "-654" },
-      { input: "100", expectedOutput: "1" }
+      { input: "100", expectedOutput: "1" },
+      { input: "12345", expectedOutput: "54321" },
+      { input: "9876", expectedOutput: "6789" },
+      { input: "1", expectedOutput: "1" },
+      { input: "-1", expectedOutput: "-1" },
+      { input: "999", expectedOutput: "999" },
+      { input: "-1000", expectedOutput: "-1" },
+      { input: "7", expectedOutput: "7" },
+      { input: "10", expectedOutput: "1" },
+      { input: "-99", expectedOutput: "-99" },
+      { input: "2020", expectedOutput: "202" }
     ],
     hints: [
       "Используйте do-while для обработки каждой цифры",
