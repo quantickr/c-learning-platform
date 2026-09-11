@@ -17,13 +17,11 @@ export async function POST(request: NextRequest) {
   try {
     const { code, input } = await request.json() as CompileRequest;
 
-    // Используем Judge0 API для компиляции и запуска кода
-    const response = await fetch('https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true', {
+    // Используем бесплатный публичный Judge0 API
+    const response = await fetch('https://judge0-ce.p.sulu.sh/submissions?base64_encoded=false&wait=true', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'X-RapidAPI-Key': process.env.RAPIDAPI_KEY || '',
-        'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         source_code: code,
