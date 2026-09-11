@@ -294,7 +294,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
 
       {showResults && testResults.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-lg font-semibold">Результаты тестов:</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Результаты тестов:</h3>
           <div className="space-y-2">
             {testResults.map((result, index) => (
               <div
@@ -306,7 +306,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="font-semibold">Тест {index + 1}</span>
+                  <span className="font-semibold text-gray-900">Тест {index + 1}</span>
                   <span
                     className={`px-2 py-1 rounded text-sm font-semibold ${
                       result.passed
@@ -327,21 +327,21 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                   <div>
                     <div className="font-semibold text-gray-900 mb-1">Входные данные:</div>
-                    <div className="bg-white p-2 rounded border font-mono whitespace-pre-wrap break-all">
+                    <div className="bg-white p-2 rounded border font-mono whitespace-pre-wrap break-all text-gray-900">
                       {result.input || '(пусто)'}
                     </div>
                   </div>
 
                   <div>
                     <div className="font-semibold text-gray-900 mb-1">Ожидаемый вывод:</div>
-                    <div className="bg-white p-2 rounded border font-mono whitespace-pre-wrap break-all">
+                    <div className="bg-white p-2 rounded border font-mono whitespace-pre-wrap break-all text-gray-900">
                       {result.expectedOutput}
                     </div>
                   </div>
 
                   <div>
                     <div className="font-semibold text-gray-900 mb-1">Ваш вывод:</div>
-                    <div className="bg-white p-2 rounded border font-mono whitespace-pre-wrap break-all">
+                    <div className="bg-white p-2 rounded border font-mono whitespace-pre-wrap break-all text-gray-900">
                       {result.error ? (
                         <span className="text-red-600">{result.error}</span>
                       ) : (
