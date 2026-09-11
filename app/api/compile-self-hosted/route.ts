@@ -5,14 +5,72 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const JUDGE0_URL = process.env.JUDGE0_URL || 'http://localhost:2358';
 
+// Валидация URL для защиты от SSRF
+const ALLOWED_HOSTS = [
+  'localhost',
+  '127.0.0.1',
+  '::1',
+  // Добавьте ваши Railway/VPS хосты сюда
+];
+
+function validateJudge0URL(urlString: string): boolean {
+  try {
+    const url = new URL(urlString);
+
+    // Проверка протокола
+    if (!['http:', 'https:'].includes(url.protocol)) {
+      return false;
+    }
+
+    // Проверка хоста (разрешаем localhost и Railway домены)
+    const hostname = url.hostname.toLowerCase();
+    if (ALLOWED_HOSTS.includes(hostname) || hostname.endsWith('.railway.app')) {
+      return true;
+    }
+
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { code, input } = await request.json();
+    // Валидация размера запроса
+    const body = await request.json();
+    const { code, input } = body;
 
     if (!code) {
       return NextResponse.json(
         { success: false, error: 'Код не может быть пустым' },
         { status: 400 }
+      );
+    }
+
+    // Ограничение размера кода и входных данных
+    if (code.length > 100000) {
+      return NextResponse.json(
+        { success: false, error: 'Код слишком большой (максимум 100KB)' },
+        { status: 413 }
+      );
+    }
+
+    if (input && input.length > 10000) {
+      return NextResponse.json(
+        { success: false, error: 'Входные данные слишком большие (максимум 10KB)' },
+        { status: 413 }
+      );
+    }
+
+    // Валидация JUDGE0_URL для защиты от SSRF
+    if (!validateJudge0URL(JUDGE0_URL)) {
+      console.error('Invalid JUDGE0_URL:', JUDGE0_URL);
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Неверная конфигурация сервера компиляции'
+        },
+        { status: 500 }
       );
     }
 
@@ -42,7 +100,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Ошибка сервера компиляции. Убедитесь что Judge0 запущен.'
+          error: 'Ошибка сервера компиляции'
         },
         { status: 500 }
       );
@@ -98,20 +156,17 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Judge0 connection error:', error);
 
-    // Более информативное сообщение об ошибке
-    let errorMessage = 'Ошибка подключения к Judge0';
+    // Не раскрываем внутренние URL в сообщениях об ошибках
+    let errorMessage = 'Ошибка подключения к серверу компиляции';
 
     if (error.code === 'ECONNREFUSED') {
-      errorMessage = 'Judge0 недоступен. Убедитесь что сервер запущен на ' + JUDGE0_URL;
-    } else if (error.message) {
-      errorMessage = error.message;
+      errorMessage = 'Сервер компиляции недоступен. Обратитесь к администратору.';
     }
 
     return NextResponse.json(
       {
         success: false,
-        error: errorMessage,
-        hint: 'Проверьте переменную окружения JUDGE0_URL и доступность сервера'
+        error: errorMessage
       },
       { status: 500 }
     );

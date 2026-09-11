@@ -19,6 +19,23 @@ fi
 echo "✅ Docker готов"
 echo ""
 
+# Проверяем переменные окружения
+if [ -z "$JUDGE0_POSTGRES_PASSWORD" ] || [ -z "$JUDGE0_REDIS_PASSWORD" ]; then
+    echo "⚠️  Внимание: Используются небезопасные пароли по умолчанию!"
+    echo ""
+    echo "Для production установите переменные окружения:"
+    echo "  export JUDGE0_POSTGRES_PASSWORD='your_secure_password'"
+    echo "  export JUDGE0_REDIS_PASSWORD='your_secure_password'"
+    echo ""
+    echo "Или создайте .env файл с этими переменными."
+    echo ""
+    read -p "Продолжить с дефолтными паролями? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+    fi
+fi
+
 # Запускаем Judge0
 echo "📦 Запуск Judge0 (Redis + PostgreSQL + Judge0)..."
 docker-compose -f docker-compose.judge0.yml up -d

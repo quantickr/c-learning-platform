@@ -75,10 +75,11 @@ function rateLimit(ip: string, limit: number, windowMs: number): boolean {
 }
 
 export function middleware(request: NextRequest) {
-  // Rate limiting только для API чата
-  if (request.nextUrl.pathname === '/api/chat') {
-    const ip = getClientIP(request);
+  const pathname = request.nextUrl.pathname;
+  const ip = getClientIP(request);
 
+  // Rate limiting для API чата
+  if (pathname === '/api/chat') {
     // 10 запросов в минуту на IP
     if (!rateLimit(ip, 10, 60 * 1000)) {
       return NextResponse.json(
@@ -91,9 +92,23 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  // Rate limiting для компиляции кода
+  if (pathname.startsWith('/api/compile')) {
+    // 30 запросов в минуту на IP (тесты могут запускаться часто)
+    if (!rateLimit(ip, 30, 60 * 1000)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Слишком много запросов компиляции. Подождите минуту.'
+        },
+        { status: 429 }
+      );
+    }
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: '/api/chat',
+  matcher: ['/api/chat', '/api/compile', '/api/compile-jdoodle', '/api/compile-self-hosted', '/api/compile-piston'],
 };

@@ -6,15 +6,18 @@ services:
     image: judge0/judge0:1.13.0
     ports:
       - "2358:2358"
+    # WARNING: privileged mode required by Judge0 for sandboxing
+    # Only use on isolated/hardened hosts. Consider running in a dedicated VM.
     privileged: true
     environment:
       - REDIS_HOST=judge0-redis
       - REDIS_PORT=6379
+      - REDIS_PASSWORD=${JUDGE0_REDIS_PASSWORD:-insecure_dev_only}
       - POSTGRES_HOST=judge0-postgres
       - POSTGRES_PORT=5432
       - POSTGRES_DB=judge0
       - POSTGRES_USER=judge0
-      - POSTGRES_PASSWORD=YourSecurePassword123
+      - POSTGRES_PASSWORD=${JUDGE0_POSTGRES_PASSWORD:-insecure_dev_only}
       - ENABLE_WAIT_RESULT=true
       - ENABLE_COMPILER_OPTIONS=true
     depends_on:
@@ -27,7 +30,7 @@ services:
   # Redis для очереди задач
   judge0-redis:
     image: redis:7-alpine
-    command: redis-server --appendonly yes
+    command: redis-server --appendonly yes --requirepass ${JUDGE0_REDIS_PASSWORD:-insecure_dev_only}
     volumes:
       - judge0-redis-data:/data
     restart: unless-stopped
@@ -40,7 +43,7 @@ services:
     environment:
       - POSTGRES_DB=judge0
       - POSTGRES_USER=judge0
-      - POSTGRES_PASSWORD=YourSecurePassword123
+      - POSTGRES_PASSWORD=${JUDGE0_POSTGRES_PASSWORD:-insecure_dev_only}
     volumes:
       - judge0-postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
