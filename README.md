@@ -1,36 +1,138 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# C Learning Platform
 
-## Getting Started
+Интерактивная обучающая платформа по основам языка C с автоматической проверкой кода.
 
-First, run the development server:
+## 🚀 Возможности
 
+- **Теоретический раздел**: подробное объяснение синтаксиса C с примерами кода
+- **15 практических задач** по темам:
+  - Условные операторы (if, switch)
+  - Циклы (for, while, do-while)
+  - Функции
+  - Математические операции
+- **Автоматическая проверка кода**: встроенная система тестирования с детальным отображением результатов
+- **Встроенный редактор кода** с подсветкой синтаксиса (Monaco Editor)
+
+## 📋 Требования
+
+- Node.js 18+ 
+- npm или yarn
+
+## 🛠️ Установка и запуск
+
+1. Установите зависимости:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Настройте переменные окружения:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Создайте файл `.env.local` и добавьте ключ API для Judge0 (опционально):
+```
+RAPIDAPI_KEY=your_rapidapi_key_here
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Примечание**: Для работы автоматической проверки кода необходим ключ API от [RapidAPI Judge0](https://rapidapi.com/judge0-official/api/judge0-ce). Вы можете зарегистрироваться и получить бесплатный ключ с лимитом запросов.
 
-## Learn More
+3. Запустите проект в режиме разработки:
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+4. Откройте браузер и перейдите на [http://localhost:3000](http://localhost:3000)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🏗️ Структура проекта
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+c-learning-platform/
+├── app/
+│   ├── page.tsx              # Главная страница
+│   ├── theory/
+│   │   └── page.tsx          # Страница с теорией
+│   ├── tasks/
+│   │   ├── page.tsx          # Список задач
+│   │   └── [id]/
+│   │       └── page.tsx      # Страница отдельной задачи
+│   └── api/
+│       └── compile/
+│           └── route.ts      # API для компиляции и запуска кода
+├── components/
+│   └── CodeEditor.tsx        # Компонент редактора кода
+├── lib/
+│   ├── tasks.ts              # Данные задач и тестов
+│   └── theory.ts             # Теоретический материал
+└── README.md
+```
 
-## Deploy on Vercel
+## 📚 Содержание курса
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Теория
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Основы синтаксиса C
+2. Условные операторы (if, else, тернарный оператор)
+3. Оператор switch
+4. Циклы (for, while, do-while)
+5. Функции
+6. Математические операции
+
+### Практические задачи
+
+1. Чётное или нечётное
+2. Максимум из трёх чисел
+3. Знак числа
+4. Абсолютное значение
+5. Треугольник существует
+6. Класс оценок
+7. Евклидово расстояние между точками
+8. Манхэттенское расстояние между точками
+9. Простые числа в интервале
+10. Кратные числа в интервале
+11. Високосный год
+12. Сезон по номеру месяца
+13. День недели
+14. Подсчёт цифр в числе
+15. Реверс числа
+
+## 🧪 Система тестирования
+
+Каждая задача включает несколько автоматических тестов:
+- Базовые случаи из примеров
+- Граничные случаи (ноль, отрицательные числа)
+- Экстремальные значения
+- Особые случаи для конкретной задачи
+
+При проверке отображается:
+- Входные данные теста
+- Ожидаемый результат
+- Фактический результат
+- Статус (пройден/не пройден)
+
+## 🔧 Технологии
+
+- **Next.js 15** - React фреймворк
+- **TypeScript** - типизированный JavaScript
+- **Tailwind CSS** - стилизация
+- **Monaco Editor** - редактор кода (тот же, что в VS Code)
+- **Judge0 API** - компиляция и выполнение C кода
+- **React Markdown** - рендеринг markdown
+- **React Syntax Highlighter** - подсветка синтаксиса
+
+## 📝 Примечания
+
+- Для точности сравнения чисел с плавающей точкой используется эпсилон 1e-6
+- Все строковые результаты должны быть на русском языке в соответствии с примерами
+- Редактор кода работает с темой VS Code Dark+
+
+## 🐛 Известные ограничения
+
+- Judge0 API имеет лимиты на количество запросов в бесплатном плане
+- Время выполнения каждого теста ограничено 2 секундами
+- Максимальный объём памяти для программы: 128 МБ
+
+## 📄 Лицензия
+
+MIT
+
+## 👨‍💻 Автор
+
+Создано для лабораторной работы №1: Основы синтаксиса языка C
