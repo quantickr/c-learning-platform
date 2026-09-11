@@ -326,21 +326,21 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                   <div>
-                    <div className="font-semibold text-gray-700 mb-1">Входные данные:</div>
+                    <div className="font-semibold text-gray-900 mb-1">Входные данные:</div>
                     <div className="bg-white p-2 rounded border font-mono whitespace-pre-wrap break-all">
                       {result.input || '(пусто)'}
                     </div>
                   </div>
 
                   <div>
-                    <div className="font-semibold text-gray-700 mb-1">Ожидаемый вывод:</div>
+                    <div className="font-semibold text-gray-900 mb-1">Ожидаемый вывод:</div>
                     <div className="bg-white p-2 rounded border font-mono whitespace-pre-wrap break-all">
                       {result.expectedOutput}
                     </div>
                   </div>
 
                   <div>
-                    <div className="font-semibold text-gray-700 mb-1">Ваш вывод:</div>
+                    <div className="font-semibold text-gray-900 mb-1">Ваш вывод:</div>
                     <div className="bg-white p-2 rounded border font-mono whitespace-pre-wrap break-all">
                       {result.error ? (
                         <span className="text-red-600">{result.error}</span>
