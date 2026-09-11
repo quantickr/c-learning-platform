@@ -1,12 +1,11 @@
-import { NixpacksConfig } from '@railway/railway-config';
-
 export default {
+  $schema: "https://railway.app/railway.schema.json",
   build: {
     builder: "DOCKERFILE",
-    dockerfilePath: "./Dockerfile"
+    dockerfilePath: "Dockerfile"
   },
   deploy: {
-    startCommand: "node server.js",
+    numReplicas: 1,
     restartPolicyType: "ON_FAILURE",
     restartPolicyMaxRetries: 10
   }
