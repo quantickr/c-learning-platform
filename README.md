@@ -22,6 +22,9 @@
 
 - Node.js 18+ 
 - npm или yarn
+- JDoodle API ключи (бесплатно 200 запросов/день)
+
+**Получение API ключей:** См. [JDOODLE_SETUP.md](JDOODLE_SETUP.md)
 
 ## 🛠️ Установка и запуск
 
@@ -32,14 +35,19 @@ npm install
 
 2. Настройте переменные окружения:
 
-Создайте файл `.env.local` и добавьте ключ API для Judge0 (опционально):
+Создайте файл `.env.local`:
 ```
-RAPIDAPI_KEY=your_rapidapi_key_here
+# JDoodle API (обязательно для компиляции)
+JDOODLE_CLIENT_ID=ваш_client_id
+JDOODLE_CLIENT_SECRET=ваш_client_secret
+
+# Ollama (опционально для AI помощника)
+OLLAMA_URL=http://localhost:11434
 ```
 
 **Примечание**: 
-- Для работы автоматической проверки кода необходим ключ API от [RapidAPI Judge0](https://rapidapi.com/judge0-official/api/judge0-ce). Вы можете зарегистрироваться и получить бесплатный ключ с лимитом запросов.
-- Для работы AI помощника установите [Ollama](https://ollama.com) и модель Qwen. См. [SETUP_OLLAMA.md](SETUP_OLLAMA.md)
+- Для компиляции кода нужны JDoodle API ключи (200 запросов/день бесплатно). См. [JDOODLE_SETUP.md](JDOODLE_SETUP.md)
+- Для AI помощника установите [Ollama](https://ollama.com) и модель Qwen. См. [SETUP_OLLAMA.md](SETUP_OLLAMA.md)
 
 3. Запустите проект в режиме разработки:
 ```bash

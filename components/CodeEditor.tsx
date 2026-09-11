@@ -94,7 +94,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
       // Добавляем main() к коду пользователя
       const fullCode = mainFunction ? code + '\n' + mainFunction : code;
 
-      const response = await axios.post('/api/compile', {
+      const response = await axios.post('/api/compile-jdoodle', {
         code: fullCode,
         input: customInput
       });
@@ -123,7 +123,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
         // Добавляем main() к коду пользователя
         const fullCode = mainFunction ? code + '\n' + mainFunction : code;
 
-        const response = await axios.post('/api/compile', {
+        const response = await axios.post('/api/compile-jdoodle', {
           code: fullCode,
           input: test.input
         });

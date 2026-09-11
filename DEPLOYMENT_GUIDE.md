@@ -21,16 +21,20 @@
    - Выберите `c-learning-platform`
 
 3. **Добавьте переменные окружения:**
+   Variables → New Variable
    ```
-   RAPIDAPI_KEY=ваш_ключ_judge0
-   RAPIDAPI_HOST=judge0-ce.p.rapidapi.com
+   JDOODLE_CLIENT_ID=ваш_client_id
+   JDOODLE_CLIENT_SECRET=ваш_client_secret
    ```
+   
+   Получите ключи: https://www.jdoodle.com/compiler-api
+   (200 запросов/день бесплатно)
 
 4. **Deploy!**
    - Railway автоматически соберёт и запустит проект
    - Получите URL: `your-app.up.railway.app`
 
-5. **Добавьте базу данных (опционально):**
+5. **Добавьте базу данных (опционально для сохранения прогресса):**
    - New → Database → PostgreSQL
    - Railway автоматически подключит
 
@@ -65,9 +69,11 @@
 4. **Переменные окружения:**
    ```
    NODE_ENV=production
-   RAPIDAPI_KEY=ваш_ключ
-   RAPIDAPI_HOST=judge0-ce.p.rapidapi.com
+   JDOODLE_CLIENT_ID=ваш_client_id
+   JDOODLE_CLIENT_SECRET=ваш_client_secret
    ```
+   
+   Получите ключи: https://www.jdoodle.com/compiler-api
 
 5. **Deploy!**
 
