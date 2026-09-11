@@ -4,13 +4,18 @@ import { use } from 'react';
 import Link from 'next/link';
 import { tasks } from '@/lib/tasks';
 import CodeEditor from '@/components/CodeEditor';
+import ChatAssistant from '@/components/ChatAssistant';
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 export default function TaskPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const taskId = parseInt(id);
   const task = tasks.find(t => t.id === taskId);
   const [showHints, setShowHints] = useState(false);
+  const [showTheory, setShowTheory] = useState(false);
 
   if (!task) {
     return (
@@ -115,12 +120,63 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
                   </button>
 
                   {showHints && (
-                    <div className="mt-3 space-y-2">
-                      {task.hints.map((hint, index) => (
-                        <div key={index} className="bg-yellow-50 p-3 rounded border border-yellow-200 text-sm text-gray-700">
-                          {hint}
-                        </div>
-                      ))}
+                    <div className="mt-3 p-4 bg-yellow-50 border border-yellow-200 rounded">
+                      <ul className="space-y-2 text-sm text-gray-700">
+                        {task.hints.map((hint, index) => (
+                          <li key={index} className="flex gap-2">
+                            <span>•</span>
+                            <span>{hint}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {task.relatedTheory && (
+                <div className="mb-4">
+                  <button
+                    onClick={() => setShowTheory(!showTheory)}
+                    className="w-full px-4 py-2 bg-blue-100 text-blue-800 rounded hover:bg-blue-200 transition-colors font-semibold"
+                  >
+                    {showTheory ? '📕 Скрыть теорию' : '📖 Показать теорию'}
+                  </button>
+
+                  {showTheory && (
+                    <div className="mt-3 p-4 bg-blue-50 border border-blue-200 rounded max-h-96 overflow-y-auto">
+                      <div className="prose prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-900 prose-strong:text-gray-900 prose-ul:text-gray-900 prose-li:text-gray-900">
+                        <ReactMarkdown
+                          components={{
+                            code(props) {
+                              const { children, className, ...rest } = props;
+                              const match = /language-(\w+)/.exec(className || '');
+                              return match ? (
+                                <SyntaxHighlighter
+                                  style={vscDarkPlus as any}
+                                  language={match[1]}
+                                  PreTag="div"
+                                  customStyle={{ fontSize: '0.75rem' }}
+                                >
+                                  {String(children).replace(/\n$/, '')}
+                                </SyntaxHighlighter>
+                              ) : (
+                                <code className="bg-gray-100 text-gray-900 px-1 py-0.5 rounded text-xs" {...rest}>
+                                  {children}
+                                </code>
+                              );
+                            },
+                            h2: ({ children }) => <h2 className="text-lg font-bold text-gray-900 mb-2 mt-3">{children}</h2>,
+                            h3: ({ children }) => <h3 className="text-base font-bold text-gray-900 mb-2 mt-2">{children}</h3>,
+                            p: ({ children }) => <p className="text-gray-900 mb-2 text-sm leading-relaxed">{children}</p>,
+                            ul: ({ children }) => <ul className="list-disc list-inside text-gray-900 space-y-1 mb-2 text-sm">{children}</ul>,
+                            li: ({ children }) => <li className="text-gray-900 text-sm">{children}</li>,
+                            strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
+                          }}
+                        >
+                          {task.relatedTheory}
+                        </ReactMarkdown>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -159,6 +215,11 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
           </div>
         </div>
       </div>
+
+      {/* AI Помощник */}
+      <ChatAssistant
+        taskContext={`Задача: ${task.title}\nОписание: ${task.description}\nТип: ${task.type}`}
+      />
     </div>
   );
 }
