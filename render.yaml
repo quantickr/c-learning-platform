@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: c-learning-platform
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: RAPIDAPI_KEY
+        sync: false
+      - key: RAPIDAPI_HOST
+        value: judge0-ce.p.rapidapi.com
