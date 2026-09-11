@@ -56,7 +56,7 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
             {prevTask && (
               <Link
                 href={`/tasks/${prevTask.id}`}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+                className="px-4 py-2 bg-gray-200 text-gray-900 rounded hover:bg-gray-300 transition-colors"
               >
                 ← Предыдущая
               </Link>
@@ -87,7 +87,7 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
                 {task.title}
               </h1>
 
-              <p className="text-gray-700 mb-6">
+              <p className="text-gray-900 mb-6">
                 {task.description}
               </p>
 
@@ -97,13 +97,13 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
                   {task.examples.map((example, index) => (
                     <div key={index} className="bg-gray-50 p-3 rounded border">
                       <div className="text-sm mb-1">
-                        <span className="font-semibold text-gray-700">Вход:</span>
+                        <span className="font-semibold text-gray-900">Вход:</span>
                         <code className="ml-2 bg-white px-2 py-1 rounded text-xs">
                           {example.input}
                         </code>
                       </div>
                       <div className="text-sm">
-                        <span className="font-semibold text-gray-700">Выход:</span>
+                        <span className="font-semibold text-gray-900">Выход:</span>
                         <code className="ml-2 bg-white px-2 py-1 rounded text-xs">
                           {example.output}
                         </code>
@@ -124,7 +124,7 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
 
                   {showHints && (
                     <div className="mt-3 p-4 bg-yellow-50 border border-yellow-200 rounded">
-                      <ul className="space-y-2 text-sm text-gray-700">
+                      <ul className="space-y-2 text-sm text-gray-900">
                         {task.hints.map((hint, index) => (
                           <li key={index} className="flex gap-2">
                             <span>•</span>
@@ -185,7 +185,7 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
                 </div>
               )}
 
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-900">
                 <strong>Количество тестов:</strong> {task.tests.length}
               </div>
             </div>
@@ -207,7 +207,7 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
 
               <div className="mt-6 bg-gray-50 p-4 rounded border">
                 <h3 className="font-bold text-gray-900 mb-2">💡 Советы:</h3>
-                <ul className="text-sm text-gray-700 space-y-1 list-disc list-inside">
+                <ul className="text-sm text-gray-900 space-y-1 list-disc list-inside">
                   <li>Напишите код внутри предоставленной функции</li>
                   <li>Функция main() добавляется автоматически при проверке</li>
                   <li>После написания кода нажмите «Запустить тесты»</li>

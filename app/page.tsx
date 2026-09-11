@@ -11,7 +11,7 @@ export default function Home() {
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
             Изучение основ языка C
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-900 max-w-3xl mx-auto">
             Интерактивный курс по основам синтаксиса C с автоматической проверкой кода
           </p>
         </header>
@@ -23,7 +23,7 @@ export default function Home() {
               <h2 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
                 Теория
               </h2>
-              <p className="text-gray-600">
+              <p className="text-gray-900">
                 Изучите основы синтаксиса C: условные операторы, циклы, функции и математические операции
               </p>
             </div>
@@ -35,7 +35,7 @@ export default function Home() {
               <h2 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">
                 Задачи
               </h2>
-              <p className="text-gray-600">
+              <p className="text-gray-900">
                 Решите 15 практических задач с автоматической проверкой вашего кода
               </p>
             </div>
@@ -45,7 +45,7 @@ export default function Home() {
         <div className="bg-white rounded-xl shadow-lg p-8 max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">О курсе</h2>
 
-          <div className="space-y-4 text-gray-700">
+          <div className="space-y-4 text-gray-900">
             <p>
               Этот курс создан для изучения основ программирования на языке C.
               Вы познакомитесь с базовым синтаксисом языка и научитесь:
@@ -87,7 +87,7 @@ export default function Home() {
           </div>
         </div>
 
-        <footer className="text-center mt-16 text-gray-600">
+        <footer className="text-center mt-16 text-gray-900">
           <p>Лабораторная работа №1: Основы синтаксиса языка C</p>
         </footer>
       </div>

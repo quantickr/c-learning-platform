@@ -20,7 +20,7 @@ export default function TheoryPage() {
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
             Теория: Основы языка C
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-900">
             Изучите основные конструкции языка C с примерами и пояснениями
           </p>
         </header>
@@ -108,7 +108,7 @@ export default function TheoryPage() {
                         {section.examples.map((example, index) => (
                           <div key={index} className="border rounded-lg overflow-hidden">
                             <div className="bg-gray-100 px-4 py-2 border-b">
-                              <p className="text-sm text-gray-700 font-medium">
+                              <p className="text-sm text-gray-900 font-medium">
                                 {example.description}
                               </p>
                             </div>

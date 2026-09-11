@@ -261,7 +261,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
           <h3 className="text-lg font-semibold mb-3">Отладка кода</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-900 mb-2">
                 Входные данные:
               </label>
               <textarea
@@ -273,7 +273,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-900 mb-2">
                 Результат выполнения:
               </label>
               <div className="w-full h-32 p-3 border rounded bg-white font-mono text-sm overflow-auto whitespace-pre-wrap">
@@ -319,7 +319,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
                 </div>
 
                 {result.description && (
-                  <div className="mb-2 text-sm text-gray-600">
+                  <div className="mb-2 text-sm text-gray-900">
                     {result.description}
                   </div>
                 )}

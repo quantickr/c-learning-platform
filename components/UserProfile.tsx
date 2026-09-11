@@ -70,15 +70,15 @@ export default function UserProfile() {
 
       <div className="p-4">
         {loading && (
-          <div className="text-center text-gray-500">Загрузка...</div>
+          <div className="text-center text-gray-900">Загрузка...</div>
         )}
 
         {!loading && progress && (
           <div className="space-y-4">
             {/* ID пользователя */}
             <div className="bg-gray-50 p-3 rounded">
-              <div className="text-xs text-gray-500 mb-1">ID пользователя</div>
-              <div className="text-xs font-mono text-gray-700 break-all">
+              <div className="text-xs text-gray-900 mb-1">ID пользователя</div>
+              <div className="text-xs font-mono text-gray-900 break-all">
                 {progress.userId.slice(0, 8)}...
               </div>
             </div>
@@ -120,7 +120,7 @@ export default function UserProfile() {
 
             {/* Решённые задачи */}
             <div>
-              <div className="text-sm font-bold text-gray-700 mb-2">
+              <div className="text-sm font-bold text-gray-900 mb-2">
                 Решённые задачи:
               </div>
               {progress.progress.completedTasks.length > 0 ? (
@@ -135,14 +135,14 @@ export default function UserProfile() {
                   ))}
                 </div>
               ) : (
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-gray-900">
                   Пока ни одной задачи не решено
                 </div>
               )}
             </div>
 
             {/* Последний визит */}
-            <div className="text-xs text-gray-500 pt-2 border-t">
+            <div className="text-xs text-gray-900 pt-2 border-t">
               Последний визит: {new Date(progress.progress.lastAccess).toLocaleString('ru-RU')}
             </div>
           </div>

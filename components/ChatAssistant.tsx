@@ -88,7 +88,7 @@ export default function ChatAssistant({ taskContext }: ChatAssistantProps) {
           {/* Сообщения */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.length === 0 && (
-              <div className="text-center text-gray-500 text-sm mt-8">
+              <div className="text-center text-gray-900 text-sm mt-8">
                 <p className="mb-2">👋 Привет! Я помогу с задачами по C.</p>
                 <p className="text-xs">Задавай вопросы о синтаксисе, логике или подсказки к задачам.</p>
               </div>

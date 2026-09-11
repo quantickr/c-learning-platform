@@ -44,7 +44,7 @@ export default function TasksPage() {
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
             Практические задачи
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-900">
             Решите 15 задач по основам синтаксиса C с автоматической проверкой
           </p>
         </header>
@@ -84,11 +84,11 @@ export default function TasksPage() {
                         {task.title}
                       </h3>
 
-                      <p className="text-sm text-gray-600 mb-3 flex-grow">
+                      <p className="text-sm text-gray-900 mb-3 flex-grow">
                         {task.description}
                       </p>
 
-                      <div className="text-xs text-gray-500">
+                      <div className="text-xs text-gray-900">
                         {task.tests.length} тестов
                       </div>
                     </div>
