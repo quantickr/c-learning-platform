@@ -1,8 +1,11 @@
 import Link from 'next/link';
+import UserProfile from '@/components/UserProfile';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+      <UserProfile />
+
       <div className="container mx-auto px-4 py-12">
         <header className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-4">

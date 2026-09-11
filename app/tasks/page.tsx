@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { tasks } from '@/lib/tasks';
+import UserProfile from '@/components/UserProfile';
 
 export default function TasksPage() {
   const tasksByType = tasks.reduce((acc, task) => {
@@ -30,6 +31,8 @@ export default function TasksPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <UserProfile />
+
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
           <Link href="/" className="text-blue-600 hover:text-blue-800 flex items-center gap-2">

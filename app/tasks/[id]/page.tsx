@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { tasks } from '@/lib/tasks';
 import CodeEditor from '@/components/CodeEditor';
 import ChatAssistant from '@/components/ChatAssistant';
+import UserProfile from '@/components/UserProfile';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -44,6 +45,8 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <UserProfile />
+
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6 flex items-center justify-between">
           <Link href="/tasks" className="text-blue-600 hover:text-blue-800 flex items-center gap-2">

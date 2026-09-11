@@ -164,6 +164,20 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
 
     // Проверяем, все ли тесты прошли
     const allPassed = results.every(r => r.passed);
+    const passedTests = results.filter(r => r.passed).length;
+
+    // Сохраняем прогресс
+    try {
+      await axios.post('/api/progress', {
+        taskId,
+        passed: allPassed,
+        testsTotal: results.length,
+        testsPassed: passedTests
+      });
+    } catch (error) {
+      console.error('Failed to save progress:', error);
+    }
+
     if (allPassed && onSuccess) {
       onSuccess();
     }
