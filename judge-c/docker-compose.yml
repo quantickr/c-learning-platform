@@ -1,0 +1,23 @@
+services:
+  c-judge:
+    build: .
+    container_name: c-judge
+    ports:
+      - "2358:2358"
+    environment:
+      # ВАЖНО: токен должен совпадать с JUDGE0_TOKEN на Railway
+      - JUDGE_TOKEN=${JUDGE_TOKEN}
+    # Лимиты ресурсов — защита от abuse
+    mem_limit: 512m
+    mem_reservation: 128m
+    cpus: 1.0
+    pids_limit: 64
+    # Запрет повышения привилегий
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:2358/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

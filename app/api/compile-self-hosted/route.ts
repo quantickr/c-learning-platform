@@ -4,12 +4,14 @@ import { NextRequest, NextResponse } from 'next/server';
 // См. SELF_HOSTED_JUDGE0.md для настройки
 
 const JUDGE0_URL = process.env.JUDGE0_URL || 'http://localhost:2358';
+const JUDGE0_TOKEN = process.env.JUDGE0_TOKEN || '';
 
 // Валидация URL для защиты от SSRF
 const ALLOWED_HOSTS = [
   'localhost',
   '127.0.0.1',
   '::1',
+  '176.57.218.50', // Timeweb VPS с лёгким C-judge
   // Добавьте ваши Railway/VPS хосты сюда
 ];
 
@@ -81,6 +83,7 @@ export async function POST(request: NextRequest) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-Judge-Token': JUDGE0_TOKEN,
         },
         body: JSON.stringify({
           source_code: code,
@@ -131,17 +134,17 @@ export async function POST(request: NextRequest) {
         compilationError: true,
       });
     } else if (result.status.id === 5) {
+      // Превышено время выполнения
+      return NextResponse.json({
+        success: false,
+        error: 'Превышено время выполнения (5 секунд)',
+        runtimeError: true,
+      });
+    } else if (result.status.id === 8) {
       // Runtime error (например, segfault)
       return NextResponse.json({
         success: false,
         error: result.stderr || 'Ошибка выполнения',
-        runtimeError: true,
-      });
-    } else if (result.status.id === 7) {
-      // Превышено время выполнения
-      return NextResponse.json({
-        success: false,
-        error: 'Превышено время выполнения (2 секунды)',
         runtimeError: true,
       });
     } else {
