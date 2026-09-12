@@ -344,10 +344,12 @@ export const tasks: Task[] = [
       { input: "5", output: "0" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 int is_even(int n) {
     // Ваш код здесь
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }`,
     mainFunction: `
 int main() {
@@ -385,10 +387,12 @@ int main() {
       { input: "5 8 2", output: "8" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 int max_of_three(int a, int b, int c) {
     // Ваш код здесь
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `
@@ -426,10 +430,12 @@ int main() {
       { input: "0", output: "0" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 int sign(int n) {
     // Ваш код здесь
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `
@@ -463,10 +469,12 @@ int main() {
       { input: "5", output: "5" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 int absolute(int n) {
     // Ваш код здесь
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `
@@ -502,10 +510,12 @@ int main() {
       { input: "3 2 5", output: "0" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 int is_triangle(int a, int b, int c) {
     // Ваш код здесь
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `
@@ -544,10 +554,12 @@ int main() {
       { input: "78", output: "хорошо" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 void grade_class(int score) {
     // Ваш код здесь
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `
@@ -586,11 +598,13 @@ int main() {
       { input: "0 0 3 4", output: "5.000000" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 double euclidean_distance(double x1, double y1, double x2, double y2) {
     // Ваш код здесь
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `
@@ -624,10 +638,12 @@ int main() {
       { input: "1 2 4 6", output: "7" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 int manhattan_distance(int x1, int y1, int x2, int y2) {
     // Ваш код здесь
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `
@@ -661,10 +677,12 @@ int main() {
       { input: "0 10", output: "4.250000" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 double average_primes(int a, int b) {
     // Ваш код здесь
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `
@@ -704,10 +722,12 @@ int main() {
       { input: "1 10 2", output: "5" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 int count_multiples(int a, int b, int k) {
     // Ваш код здесь
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `
@@ -743,10 +763,12 @@ int main() {
       { input: "2024", output: "1" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 int is_leap_year(int year) {
     // Ваш код здесь
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `
@@ -790,10 +812,12 @@ int main() {
       { input: "13", output: "некорректно" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 void season(int month) {
     // Ваш код здесь
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `
@@ -834,10 +858,12 @@ int main() {
       { input: "743", output: "некорректно" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 void day_of_week(int day) {
     // Ваш код здесь
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `
@@ -873,11 +899,13 @@ int main() {
       { input: "7", output: "1" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 int count_digits(int n) {
     // Ваш код здесь
     // Используйте do-while!
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `
@@ -918,11 +946,13 @@ int main() {
       { input: "1000", output: "1" }
     ],
     template: `#include <stdio.h>
+#include <stdlib.h>
 
 int reverse_number(int n) {
     // Ваш код здесь
     // Используйте do-while!
 
+    exit(0); // заглушка: пока решения нет, программа завершается без вывода
 }
 `,
     mainFunction: `

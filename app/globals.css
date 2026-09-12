@@ -24,27 +24,3 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
-
-/* Принудительно чёрный текст для основных элементов, НО НЕ для Monaco Editor */
-h1, h2, h3, h4, h5, h6,
-p, span, div, label, li, a {
-  color: #171717;
-}
-
-/* Исключения для элементов с явно заданными цветами */
-.text-white,
-.text-green-600,
-.text-green-800,
-.text-red-600,
-.text-red-800,
-.text-orange-600,
-.text-blue-600,
-.text-purple-600 {
-  color: inherit;
-}
-
-/* Monaco Editor НЕ должен быть затронут - у него своя тёмная тема */
-.monaco-editor,
-.monaco-editor * {
-  /* Оставляем цвета Monaco Editor без изменений */
-}

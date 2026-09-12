@@ -3,6 +3,7 @@
 import { use } from 'react';
 import Link from 'next/link';
 import { tasks } from '@/lib/tasks';
+import { taskSyntax } from '@/lib/taskSyntax';
 import CodeEditor from '@/components/CodeEditor';
 import ChatAssistant from '@/components/ChatAssistant';
 import UserProfile from '@/components/UserProfile';
@@ -10,6 +11,34 @@ import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+// Общий рендерер markdown: подсветка код-блоков и цвета текста
+const markdownComponents = {
+  code(props: any) {
+    const { children, className, ...rest } = props;
+    const match = /language-(\w+)/.exec(className || '');
+    return match ? (
+      <SyntaxHighlighter
+        style={vscDarkPlus as any}
+        language={match[1]}
+        PreTag="div"
+        customStyle={{ fontSize: '0.75rem' }}
+      >
+        {String(children).replace(/\n$/, '')}
+      </SyntaxHighlighter>
+    ) : (
+      <code className="bg-gray-100 text-gray-900 px-1 py-0.5 rounded text-xs" {...rest}>
+        {children}
+      </code>
+    );
+  },
+  h2: ({ children }: any) => <h2 className="text-lg font-bold text-gray-900 mb-2 mt-3">{children}</h2>,
+  h3: ({ children }: any) => <h3 className="text-base font-bold text-gray-900 mb-2 mt-2">{children}</h3>,
+  p: ({ children }: any) => <p className="text-gray-900 mb-2 text-sm leading-relaxed">{children}</p>,
+  ul: ({ children }: any) => <ul className="list-disc list-inside text-gray-900 space-y-1 mb-2 text-sm">{children}</ul>,
+  li: ({ children }: any) => <li className="text-gray-900 text-sm">{children}</li>,
+  strong: ({ children }: any) => <strong className="font-bold text-gray-900">{children}</strong>,
+};
 
 export default function TaskPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -113,6 +142,19 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
                 </div>
               </div>
 
+              {taskSyntax[task.id] && (
+                <div className="mb-6">
+                  <h3 className="font-bold text-gray-900 mb-2">Синтаксис к задаче:</h3>
+                  <div className="p-4 bg-gray-50 border rounded max-h-96 overflow-y-auto">
+                    <div className="prose prose-sm max-w-none">
+                      <ReactMarkdown components={markdownComponents as any}>
+                        {taskSyntax[task.id]}
+                      </ReactMarkdown>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {task.hints && task.hints.length > 0 && (
                 <div className="mb-4">
                   <button
@@ -149,34 +191,7 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
                   {showTheory && (
                     <div className="mt-3 p-4 bg-blue-50 border border-blue-200 rounded max-h-96 overflow-y-auto">
                       <div className="prose prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-900 prose-strong:text-gray-900 prose-ul:text-gray-900 prose-li:text-gray-900">
-                        <ReactMarkdown
-                          components={{
-                            code(props) {
-                              const { children, className, ...rest } = props;
-                              const match = /language-(\w+)/.exec(className || '');
-                              return match ? (
-                                <SyntaxHighlighter
-                                  style={vscDarkPlus as any}
-                                  language={match[1]}
-                                  PreTag="div"
-                                  customStyle={{ fontSize: '0.75rem' }}
-                                >
-                                  {String(children).replace(/\n$/, '')}
-                                </SyntaxHighlighter>
-                              ) : (
-                                <code className="bg-gray-100 text-gray-900 px-1 py-0.5 rounded text-xs" {...rest}>
-                                  {children}
-                                </code>
-                              );
-                            },
-                            h2: ({ children }) => <h2 className="text-lg font-bold text-gray-900 mb-2 mt-3">{children}</h2>,
-                            h3: ({ children }) => <h3 className="text-base font-bold text-gray-900 mb-2 mt-2">{children}</h3>,
-                            p: ({ children }) => <p className="text-gray-900 mb-2 text-sm leading-relaxed">{children}</p>,
-                            ul: ({ children }) => <ul className="list-disc list-inside text-gray-900 space-y-1 mb-2 text-sm">{children}</ul>,
-                            li: ({ children }) => <li className="text-gray-900 text-sm">{children}</li>,
-                            strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
-                          }}
-                        >
+                        <ReactMarkdown components={markdownComponents as any}>
                           {task.relatedTheory}
                         </ReactMarkdown>
                       </div>

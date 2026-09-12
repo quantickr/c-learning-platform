@@ -12,6 +12,7 @@
 """
 import os
 import base64
+import hmac
 import shutil
 import signal
 import subprocess
@@ -20,6 +21,8 @@ import resource
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
+# Защита от раздувания тела запроса: отклоняем всё крупнее 1 МБ до парсинга
+app.config["MAX_CONTENT_LENGTH"] = 1 * 1024 * 1024
 
 # Секретный токен (задаётся через переменную окружения JUDGE_TOKEN)
 JUDGE_TOKEN = os.environ.get("JUDGE_TOKEN", "")
@@ -92,7 +95,7 @@ def submissions():
         return _resp(ST_INTERNAL_ERROR, "Internal Error",
                      stderr="JUDGE_TOKEN not configured on server")
     token = request.headers.get("X-Judge-Token", "")
-    if token != JUDGE_TOKEN:
+    if not hmac.compare_digest(token, JUDGE_TOKEN):
         return jsonify({"error": "unauthorized"}), 401
 
     data = request.get_json(silent=True) or {}
