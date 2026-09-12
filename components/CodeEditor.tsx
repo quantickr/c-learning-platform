@@ -277,7 +277,15 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
                 Результат выполнения:
               </label>
               <div className="w-full h-32 p-3 border rounded bg-white font-mono text-sm overflow-auto whitespace-pre-wrap">
-                {customOutput || '(запустите код, чтобы увидеть результат)'}
+                {customOutput ? (
+                  customOutput.includes('Ошибка') ? (
+                    <span className="text-red-600">{customOutput}</span>
+                  ) : (
+                    customOutput
+                  )
+                ) : (
+                  '(запустите код, чтобы увидеть результат)'
+                )}
               </div>
             </div>
           </div>
