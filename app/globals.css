@@ -41,3 +41,11 @@ body {
 .text-purple-600 {
   color: revert !important;
 }
+
+/* Исключение для Monaco Editor - подсветка синтаксиса */
+.monaco-editor,
+.monaco-editor *,
+.monaco-editor .view-lines,
+.monaco-editor .line-numbers {
+  color: revert !important;
+}
