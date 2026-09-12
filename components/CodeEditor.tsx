@@ -258,7 +258,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
 
       {showCustomRun && (
         <div className="bg-gray-50 border rounded-lg p-4">
-          <h3 className="text-lg font-semibold mb-3">Отладка кода</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Отладка кода</h3>
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-900 mb-2">
@@ -268,7 +268,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
                 value={customInput}
                 onChange={(e) => setCustomInput(e.target.value)}
                 placeholder="Введите входные данные..."
-                className="w-full h-32 p-3 border rounded font-mono text-sm resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full h-32 p-3 border rounded font-mono text-sm text-gray-900 resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               />
             </div>
 
@@ -276,7 +276,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
               <label className="block text-sm font-medium text-gray-900 mb-2">
                 Результат выполнения:
               </label>
-              <div className="w-full h-32 p-3 border rounded bg-white font-mono text-sm overflow-auto whitespace-pre-wrap">
+              <div className="w-full h-32 p-3 border rounded bg-white font-mono text-sm text-gray-900 overflow-auto whitespace-pre-wrap">
                 {customOutput ? (
                   customOutput.includes('Ошибка') ? (
                     <span className="text-red-600">{customOutput}</span>
