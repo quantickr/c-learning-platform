@@ -25,9 +25,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Принудительно установить чёрный цвет текста для всех элементов */
-* {
-  color: #171717 !important;
+/* Принудительно чёрный текст для основных элементов, НО НЕ для Monaco Editor */
+h1, h2, h3, h4, h5, h6,
+p, span, div, label, li, a {
+  color: #171717;
 }
 
 /* Исключения для элементов с явно заданными цветами */
@@ -39,21 +40,11 @@ body {
 .text-orange-600,
 .text-blue-600,
 .text-purple-600 {
-  color: revert !important;
+  color: inherit;
 }
 
-/* Исключение для Monaco Editor - полная подсветка синтаксиса */
+/* Monaco Editor НЕ должен быть затронут - у него своя тёмная тема */
 .monaco-editor,
-.monaco-editor *,
-.monaco-editor .view-lines,
-.monaco-editor .view-lines *,
-.monaco-editor .line-numbers,
-.monaco-editor .view-line span {
-  color: revert !important;
-}
-
-/* Классы подсветки синтаксиса Monaco Editor */
-.mtk1, .mtk5, .mtk7, .mtk8, .mtk9, .mtk10,
-[class*="mtk"] {
-  color: revert !important;
+.monaco-editor * {
+  /* Оставляем цвета Monaco Editor без изменений */
 }
