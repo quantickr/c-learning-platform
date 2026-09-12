@@ -42,10 +42,18 @@ body {
   color: revert !important;
 }
 
-/* Исключение для Monaco Editor - подсветка синтаксиса */
+/* Исключение для Monaco Editor - полная подсветка синтаксиса */
 .monaco-editor,
 .monaco-editor *,
 .monaco-editor .view-lines,
-.monaco-editor .line-numbers {
+.monaco-editor .view-lines *,
+.monaco-editor .line-numbers,
+.monaco-editor .view-line span {
+  color: revert !important;
+}
+
+/* Классы подсветки синтаксиса Monaco Editor */
+.mtk1, .mtk5, .mtk7, .mtk8, .mtk9, .mtk10,
+[class*="mtk"] {
   color: revert !important;
 }
