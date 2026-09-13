@@ -374,7 +374,9 @@ int main() {
       { input: "10000", expectedOutput: "1" },
       { input: "-1", expectedOutput: "0" },
       { input: "777", expectedOutput: "0" },
-      { input: "888", expectedOutput: "1" }
+      { input: "888", expectedOutput: "1" },
+      { input: "2147483647", expectedOutput: "0", description: "INT_MAX — нечётное" },
+      { input: "-2147483648", expectedOutput: "1", description: "INT_MIN — чётное; % 2 для него безопасен" }
     ]
   ,
     relatedTheory: theoryContent.conditionals},
@@ -415,7 +417,10 @@ int main() {
       { input: "-5 0 5", expectedOutput: "5" },
       { input: "999 1000 998", expectedOutput: "1000" },
       { input: "7 7 8", expectedOutput: "8" },
-      { input: "100 100 100", expectedOutput: "100" }
+      { input: "100 100 100", expectedOutput: "100" },
+      { input: "2147483647 -2147483648 0", expectedOutput: "2147483647", description: "INT_MAX и INT_MIN рядом" },
+      { input: "-2147483648 -2147483648 -2147483648", expectedOutput: "-2147483648", description: "все три INT_MIN" },
+      { input: "2147483647 2147483647 2147483647", expectedOutput: "2147483647", description: "все три INT_MAX" }
     ]
   ,
     relatedTheory: theoryContent.conditionals},
@@ -455,14 +460,16 @@ int main() {
       { input: "100", expectedOutput: "1" },
       { input: "-50", expectedOutput: "-1" },
       { input: "999999", expectedOutput: "1" },
-      { input: "-999999", expectedOutput: "-1" }
+      { input: "-999999", expectedOutput: "-1" },
+      { input: "2147483647", expectedOutput: "1", description: "INT_MAX" },
+      { input: "-2147483648", expectedOutput: "-1", description: "INT_MIN" }
     ]
   ,
     relatedTheory: theoryContent.conditionals},
   {
     id: 4,
     title: "Абсолютное значение",
-    description: "Вычислить модуль числа без использования встроенных функций.",
+    description: "Вычислить модуль числа без использования встроенных функций. На вход подаются значения от -2147483647 до 2147483647: модуль INT_MIN равен 2147483648 и в int не помещается.",
     type: "if",
     examples: [
       { input: "-7", output: "7" },
@@ -496,14 +503,15 @@ int main() {
       { input: "9999", expectedOutput: "9999" },
       { input: "-9999", expectedOutput: "9999" },
       { input: "42", expectedOutput: "42" },
-      { input: "-42", expectedOutput: "42" }
+      { input: "-42", expectedOutput: "42" },
+      { input: "2147483647", expectedOutput: "2147483647", description: "INT_MAX — модуль равен самому числу" }
     ]
   ,
     relatedTheory: theoryContent.conditionals},
   {
     id: 5,
     title: "Треугольник существует",
-    description: "Проверить, можно ли построить треугольник по трём сторонам. Вернуть 1 если можно, 0 если нельзя.",
+    description: "Проверить, можно ли построить треугольник по трём сторонам. Вернуть 1 если можно, 0 если нельзя. Стороны в тестах подобраны так, что сумма двух из них не переполняет int.",
     type: "if",
     examples: [
       { input: "3 4 5", output: "1" },
@@ -540,7 +548,9 @@ int main() {
       { input: "1 10 100", expectedOutput: "0" },
       { input: "5 5 9", expectedOutput: "1" },
       { input: "5 5 10", expectedOutput: "0" },
-      { input: "3 4 7", expectedOutput: "0" }
+      { input: "3 4 7", expectedOutput: "0" },
+      { input: "1000000 1000000 1000000", expectedOutput: "1", description: "большие стороны, но сумма не переполняет int" },
+      { input: "1000000000 1 1", expectedOutput: "0", description: "1+1 далеко не дотягивает до 10^9" }
     ]
   ,
     relatedTheory: theoryContent.conditionals},
@@ -625,14 +635,16 @@ int main() {
       { input: "10 10 10 10", expectedOutput: "0.000000" },
       { input: "3 4 6 8", expectedOutput: "5.000000" },
       { input: "0 0 10 0", expectedOutput: "10.000000" },
-      { input: "0 0 0 10", expectedOutput: "10.000000" }
+      { input: "0 0 0 10", expectedOutput: "10.000000" },
+      { input: "0 0 2147483647 0", expectedOutput: "2147483647.000000", description: "INT_MAX по оси X — double держит его точно" },
+      { input: "-2147483648 0 2147483647 0", expectedOutput: "4294967295.000000", description: "от INT_MIN до INT_MAX: в int не влезло бы, в double влезает" }
     ]
   ,
     relatedTheory: theoryContent.math_operations},
   {
     id: 8,
     title: "Манхэттенское расстояние между точками",
-    description: "Вычислить манхэттенское расстояние между точками (x1, y1) и (x2, y2) по формуле |x2-x1| + |y2-y1|.",
+    description: "Вычислить манхэттенское расстояние между точками (x1, y1) и (x2, y2) по формуле |x2-x1| + |y2-y1|. Координаты в тестах подобраны так, что сумма модулей не переполняет int.",
     type: "math",
     examples: [
       { input: "1 2 4 6", output: "7" }
@@ -664,7 +676,8 @@ int main() {
       { input: "10 20 30 40", expectedOutput: "40" },
       { input: "0 0 5 0", expectedOutput: "5" },
       { input: "0 0 0 5", expectedOutput: "5" },
-      { input: "100 100 200 200", expectedOutput: "200" }
+      { input: "100 100 200 200", expectedOutput: "200" },
+      { input: "-1000000 -1000000 1000000 1000000", expectedOutput: "4000000", description: "большие координаты, сумма модулей не переполняет int" }
     ]
   ,
     relatedTheory: theoryContent.math_operations},
@@ -694,17 +707,19 @@ int main() {
 }`,
     tests: [
       { input: "0 10", expectedOutput: "4.250000", description: "Простые: 2,3,5,7 => (2+3+5+7)/4 = 4.25" },
-      { input: "10 20", expectedOutput: "14.500000", description: "Простые: 11,13,17,19" },
+      { input: "10 20", expectedOutput: "15.000000", description: "Простые: 11,13,17,19" },
       { input: "1 1", expectedOutput: "0.000000", description: "Нет простых чисел" },
       { input: "2 2", expectedOutput: "2.000000" },
       { input: "1 10", expectedOutput: "4.250000" },
-      { input: "20 30", expectedOutput: "25.000000", description: "Простые: 23,29" },
+      { input: "20 30", expectedOutput: "26.000000", description: "Простые: 23,29" },
       { input: "0 5", expectedOutput: "3.333333", description: "Простые: 2,3,5" },
       { input: "5 10", expectedOutput: "6.000000", description: "Простые: 5,7" },
       { input: "11 11", expectedOutput: "11.000000" },
       { input: "0 1", expectedOutput: "0.000000" },
-      { input: "2 10", expectedOutput: "4.750000", description: "Простые: 2,3,5,7" },
-      { input: "1 20", expectedOutput: "9.666667", description: "Простые: 2,3,5,7,11,13,17,19" }
+      { input: "2 10", expectedOutput: "4.250000", description: "Простые: 2,3,5,7" },
+      { input: "1 20", expectedOutput: "9.625000", description: "Простые: 2,3,5,7,11,13,17,19" },
+      { input: "1 1000", expectedOutput: "453.136905", description: "168 простых, сумма 76127" },
+      { input: "900 1000", expectedOutput: "952.142857", description: "14 простых от 907 до 997" }
     ],
     hints: [
       "Простые числа: числа больше 1, которые делятся только на 1 и на себя",
@@ -743,12 +758,16 @@ int main() {
       { input: "1 10 1", expectedOutput: "10" },
       { input: "10 10 5", expectedOutput: "1" },
       { input: "1 20 5", expectedOutput: "4", description: "5,10,15,20" },
-      { input: "0 100 10", expectedOutput: "10", description: "0,10,20...100" },
+      { input: "0 100 10", expectedOutput: "11", description: "0,10,20...100" },
       { input: "1 100 7", expectedOutput: "14" },
-      { input: "5 50 4", expectedOutput: "12" },
+      { input: "5 50 4", expectedOutput: "11" },
       { input: "1 1 1", expectedOutput: "1" },
       { input: "2 20 2", expectedOutput: "10" },
-      { input: "11 19 3", expectedOutput: "3", description: "12,15,18" }
+      { input: "11 19 3", expectedOutput: "3", description: "12,15,18" },
+      { input: "7 7 3", expectedOutput: "0", description: "одно число, не кратно k" },
+      { input: "1 10 10", expectedOutput: "1", description: "кратно только само 10" },
+      { input: "1 10 11", expectedOutput: "0", description: "k больше всего отрезка" },
+      { input: "-10 10 5", expectedOutput: "5", description: "отрицательные границы: -10,-5,0,5,10" }
     ]
   ,
     relatedTheory: theoryContent.loops_for},
@@ -793,7 +812,9 @@ int main() {
       { input: "2020", expectedOutput: "1" },
       { input: "2021", expectedOutput: "0" },
       { input: "2200", expectedOutput: "0" },
-      { input: "2800", expectedOutput: "1" }
+      { input: "2800", expectedOutput: "1" },
+      { input: "2147483647", expectedOutput: "0", description: "INT_MAX: 2147483647 % 4 = 3" },
+      { input: "2147483644", expectedOutput: "1", description: "наибольший високосный год, влезающий в int" }
     ],
     hints: [
       "Год високосный если: (делится на 4 И НЕ делится на 100) ИЛИ (делится на 400)",
@@ -843,7 +864,9 @@ int main() {
       { input: "9", expectedOutput: "осень" },
       { input: "11", expectedOutput: "осень" },
       { input: "-1", expectedOutput: "некорректно" },
-      { input: "100", expectedOutput: "некорректно" }
+      { input: "100", expectedOutput: "некорректно" },
+      { input: "2147483647", expectedOutput: "некорректно", description: "INT_MAX" },
+      { input: "-2147483648", expectedOutput: "некорректно", description: "INT_MIN" }
     ]
   ,
     relatedTheory: theoryContent.switch_case},
@@ -885,14 +908,16 @@ int main() {
       { input: "0", expectedOutput: "некорректно" },
       { input: "8", expectedOutput: "некорректно" },
       { input: "-1", expectedOutput: "некорректно" },
-      { input: "100", expectedOutput: "некорректно" }
+      { input: "100", expectedOutput: "некорректно" },
+      { input: "2147483647", expectedOutput: "некорректно", description: "INT_MAX" },
+      { input: "-2147483648", expectedOutput: "некорректно", description: "INT_MIN" }
     ]
   ,
     relatedTheory: theoryContent.switch_case},
   {
     id: 14,
     title: "Подсчёт цифр в числе",
-    description: "Подсчитать количество цифр в числе. Используйте цикл do-while.",
+    description: "Подсчитать количество цифр в числе. Используйте цикл do-while. На вход подаются значения от -2147483647 до 2147483647: для INT_MIN модуль не помещается в int.",
     type: "do-while",
     examples: [
       { input: "2020", output: "4" },
@@ -928,7 +953,9 @@ int main() {
       { input: "100", expectedOutput: "3" },
       { input: "-9999", expectedOutput: "4" },
       { input: "42", expectedOutput: "2" },
-      { input: "987654321", expectedOutput: "9" }
+      { input: "987654321", expectedOutput: "9" },
+      { input: "2147483647", expectedOutput: "10", description: "INT_MAX — 10 цифр" },
+      { input: "-2147483647", expectedOutput: "10", description: "-INT_MAX: знак не считается" }
     ],
     hints: [
       "Используйте do-while для обработки каждой цифры",
@@ -939,7 +966,7 @@ int main() {
   {
     id: 15,
     title: "Реверс числа",
-    description: "Развернуть число задом наперёд. Например, 123 -> 321. Используйте цикл do-while.",
+    description: "Развернуть число задом наперёд. Например, 123 -> 321. Используйте цикл do-while. На вход подаются значения от -2147483647 до 2147483647, перевёрнутое число тоже помещается в int.",
     type: "do-while",
     examples: [
       { input: "123", output: "321" },
@@ -977,7 +1004,10 @@ int main() {
       { input: "7", expectedOutput: "7" },
       { input: "10", expectedOutput: "1" },
       { input: "-99", expectedOutput: "-99" },
-      { input: "2020", expectedOutput: "202" }
+      { input: "2020", expectedOutput: "202" },
+      { input: "1234567890", expectedOutput: "987654321", description: "ноль в конце теряется" },
+      { input: "-1234567890", expectedOutput: "-987654321", description: "знак сохраняется" },
+      { input: "1000000000", expectedOutput: "1", description: "миллиард превращается в единицу" }
     ],
     hints: [
       "Используйте do-while для обработки каждой цифры",
