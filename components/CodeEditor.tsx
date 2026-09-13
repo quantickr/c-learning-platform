@@ -25,6 +25,39 @@ interface TestResult {
   description?: string;
 }
 
+// Шаблон сохраняем рядом с кодом, чтобы отличать «ученик ничего не менял»
+// от «ученик написал решение». Первое можно выбросить при смене шаблона,
+// второе — никогда.
+const codeKey = (id: number) => `task_${id}_code`;
+const tplKey = (id: number) => `task_${id}_tpl`;
+
+// Кэши, оставшиеся до появления tplKey, несут код без отметки шаблона.
+// Из них безопасно выбросить только заведомо нерабочие: без return, printf
+// и exit код не проходит ни одного теста ни на одной из задач. Остальное
+// может быть настоящей работой — оставляем.
+function isDeadLegacyCode(src: string): boolean {
+  const stripped = src.replace(/\/\/[^\n]*/g, '');
+  return !/\b(return|printf|puts|putchar|exit)\b/.test(stripped);
+}
+
+// Предупреждения gcc. Код собрался и может даже проходить тесты, но это
+// ровно то, что ученик должен увидеть: забытый return, printf("%d", double),
+// присвоенная и не использованная переменная. Отдельный цвет — не ошибка
+// и не успех.
+function WarningBox({ text }: { text: string }) {
+  if (!text) return null;
+  return (
+    <div className="mt-3 p-3 rounded border-2 border-amber-400 bg-amber-50">
+      <div className="font-semibold text-amber-900 mb-1 text-sm">
+        ⚠ Компилятор предупреждает
+      </div>
+      <pre className="text-xs text-amber-900 whitespace-pre-wrap break-all font-mono">
+        {text}
+      </pre>
+    </div>
+  );
+}
+
 export default function CodeEditor({ initialCode, taskId, mainFunction, tests, onSuccess }: CodeEditorProps) {
   const [code, setCode] = useState(initialCode);
   const [isRunning, setIsRunning] = useState(false);
@@ -32,19 +65,42 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
   const [showResults, setShowResults] = useState(false);
   const [customInput, setCustomInput] = useState('');
   const [customOutput, setCustomOutput] = useState('');
+  const [customWarning, setCustomWarning] = useState('');
+  const [testWarning, setTestWarning] = useState('');
   const [showCustomRun, setShowCustomRun] = useState(false);
   const [isCustomRunning, setIsCustomRunning] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'saved' | 'unsaved' | 'saving'>('saved');
 
   // Загрузка сохранённого кода при монтировании
   useEffect(() => {
-    if (taskId) {
-      const savedCode = localStorage.getItem(`task_${taskId}_code`);
-      if (savedCode) {
-        setCode(savedCode);
-        setSaveStatus('saved');
-      }
+    if (!taskId) return;
+    let saved: string | null;
+    let savedTpl: string | null;
+    try {
+      saved = localStorage.getItem(codeKey(taskId));
+      savedTpl = localStorage.getItem(tplKey(taskId));
+    } catch {
+      return; // приватный режим или заблокированное хранилище — работаем без него
     }
+    if (!saved) return;
+
+    if (savedTpl === null) {
+      // старый кэш без отметки шаблона
+      if (isDeadLegacyCode(saved)) {
+        try { localStorage.removeItem(codeKey(taskId)); } catch { /* не критично */ }
+        return;
+      }
+    } else if (saved === savedTpl) {
+      // шаблон не правили, а сам он мог устареть — берём текущий
+      try {
+        localStorage.removeItem(codeKey(taskId));
+        localStorage.removeItem(tplKey(taskId));
+      } catch { /* не критично */ }
+      return;
+    }
+
+    setCode(saved);
+    setSaveStatus('saved');
   }, [taskId]);
 
   // Автосохранение при изменении кода
@@ -52,7 +108,10 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
     if (taskId && code !== initialCode) {
       setSaveStatus('unsaved');
       const timer = setTimeout(() => {
-        localStorage.setItem(`task_${taskId}_code`, code);
+        try {
+          localStorage.setItem(codeKey(taskId), code);
+          localStorage.setItem(tplKey(taskId), initialCode);
+        } catch { /* хранилище недоступно — просто не сохраняем */ }
         setSaveStatus('saved');
       }, 1000); // Сохранение через 1 секунду после последнего изменения
 
@@ -64,7 +123,10 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
     if (confirm('Вы уверены, что хотите сбросить код к начальному шаблону? Все изменения будут потеряны.')) {
       setCode(initialCode);
       if (taskId) {
-        localStorage.removeItem(`task_${taskId}_code`);
+        try {
+          localStorage.removeItem(codeKey(taskId));
+          localStorage.removeItem(tplKey(taskId));
+        } catch { /* не критично */ }
       }
       setSaveStatus('saved');
     }
@@ -89,6 +151,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
   const runCustomCode = async () => {
     setIsCustomRunning(true);
     setCustomOutput('');
+    setCustomWarning('');
 
     try {
       // Добавляем main() к коду пользователя
@@ -101,6 +164,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
 
       if (response.data.success) {
         setCustomOutput(response.data.output || '(пусто)');
+        setCustomWarning(response.data.warnings || '');
       } else {
         setCustomOutput(`Ошибка:\n${response.data.error}`);
       }
@@ -115,8 +179,12 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
     setIsRunning(true);
     setShowResults(true);
     setTestResults([]);
+    setTestWarning('');
 
     const results: TestResult[] = [];
+    // gcc компилирует один и тот же код на каждый тест, поэтому
+    // предупреждения одинаковые — показываем их один раз, не в каждой карточке
+    let warning = '';
 
     for (const test of tests) {
       try {
@@ -129,6 +197,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
         });
 
         if (response.data.success) {
+          if (!warning && response.data.warnings) warning = response.data.warnings;
           const passed = compareOutputs(test.expectedOutput, response.data.output);
           results.push({
             passed,
@@ -160,6 +229,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
     }
 
     setTestResults(results);
+    setTestWarning(warning);
     setIsRunning(false);
 
     // Проверяем, все ли тесты прошли
@@ -290,6 +360,8 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
             </div>
           </div>
 
+          <WarningBox text={customWarning} />
+
           <button
             onClick={runCustomCode}
             disabled={isCustomRunning}
@@ -303,6 +375,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
       {showResults && testResults.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-lg font-semibold text-gray-900">Результаты тестов:</h3>
+          <WarningBox text={testWarning} />
           <div className="space-y-2">
             {testResults.map((result, index) => (
               <div
