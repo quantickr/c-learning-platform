@@ -40,3 +40,7 @@ next-env.d.ts
 dev.log
 *.log
 judge-c/.env
+
+# python (judge-c)
+__pycache__/
+*.pyc
