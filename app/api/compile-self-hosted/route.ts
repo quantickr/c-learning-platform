@@ -119,10 +119,14 @@ export async function POST(request: NextRequest) {
     // 6-14: Различные ошибки
 
     if (result.status.id === 3) {
-      // Успешное выполнение
+      // Успешное выполнение.
+      // warnings — gcc -Wall при успешной компиляции: забытый return,
+      // printf("%d", double), неиспользуемая переменная. Код работает,
+      // но школьнику это важнее, чем зелёная галочка.
       return NextResponse.json({
         success: true,
         output: (result.stdout || '').trim(),
+        warnings: (result.warnings || '').trim(),
         time: result.time,
         memory: result.memory,
       });

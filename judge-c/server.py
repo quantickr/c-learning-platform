@@ -118,10 +118,17 @@ def submissions():
             f.write(source)
 
         # --- Компиляция ---
+        # -Wall вместо -w: предупреждения — главный учебный сигнал. Без них
+        #   забытый return в не-void функции тихо превращается в мусорный 0,
+        #   который ещё и проходит тесты, ожидающие ноль.
+        # -Werror=return-type: такое не должно доходить до запуска — UB, а не
+        #   «решение с ошибкой». Школьник получает внятную ошибку компиляции.
+        # Остальные предупреждения остаются предупреждениями и уходят в поле
+        # warnings успешного ответа.
         try:
             comp = subprocess.run(
-                ["gcc", src_path, "-o", exe_path, "-lm", "-O2", "-w",
-                 "-fno-strict-aliasing"],
+                ["gcc", src_path, "-o", exe_path, "-lm", "-O2",
+                 "-Wall", "-Werror=return-type", "-fno-strict-aliasing"],
                 capture_output=True, text=True, timeout=COMPILE_TIMEOUT
             )
         except subprocess.TimeoutExpired:
@@ -157,7 +164,8 @@ def submissions():
 
         return _resp(ST_ACCEPTED, "Accepted",
                      stdout=run.stdout[:MAX_OUTPUT],
-                     stderr=run.stderr[:MAX_OUTPUT])
+                     stderr=run.stderr[:MAX_OUTPUT],
+                     warnings=comp.stderr[:MAX_OUTPUT])
 
     except Exception as e:  # noqa: BLE001
         return _resp(ST_INTERNAL_ERROR, "Internal Error", stderr=str(e)[:MAX_OUTPUT])
