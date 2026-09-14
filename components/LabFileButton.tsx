@@ -58,7 +58,10 @@ export default function LabFileButton() {
         <div className="mt-5">
           <div className="text-sm text-gray-900 mb-3">
             Перенесено решений: <strong>{build.carried}</strong> из {build.total} функций,
-            заглушками осталось: <strong>{build.todo}</strong>.
+            заглушками осталось: <strong>{build.todo}</strong>
+            {build.helpers > 0 && (
+              <>, вспомогательных функций подхвачено: <strong>{build.helpers}</strong></>
+            )}.
           </div>
 
           {build.notes.length > 0 && (
