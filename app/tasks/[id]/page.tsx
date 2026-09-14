@@ -6,6 +6,7 @@ import { tasks } from '@/lib/tasks';
 import { taskSyntax } from '@/lib/taskSyntax';
 import CodeEditor from '@/components/CodeEditor';
 import ChatAssistant from '@/components/ChatAssistant';
+import LabFileButton from '@/components/LabFileButton';
 import UserProfile from '@/components/UserProfile';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
@@ -230,6 +231,13 @@ export default function TaskPage({ params }: { params: Promise<{ id: string }> }
                 </ul>
               </div>
             </div>
+
+            {/* Сборка lab1.c — только на последней задаче, дальше идти некуда */}
+            {!nextTask && (
+              <div className="mt-6">
+                <LabFileButton />
+              </div>
+            )}
           </div>
         </div>
       </div>

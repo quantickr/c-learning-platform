@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { tasks } from '@/lib/tasks';
+import LabFileButton from '@/components/LabFileButton';
 import UserProfile from '@/components/UserProfile';
 
 export default function TasksPage() {
@@ -97,6 +98,10 @@ export default function TasksPage() {
               </div>
             </section>
           ))}
+        </div>
+
+        <div className="mt-12">
+          <LabFileButton />
         </div>
 
         <div className="mt-12 bg-blue-50 border-l-4 border-blue-500 p-6 rounded">
