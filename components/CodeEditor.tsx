@@ -3,6 +3,13 @@
 import { Editor } from '@monaco-editor/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import {
+  clearSavedCode,
+  isDeadLegacyCode,
+  readSavedCode,
+  readSavedTemplate,
+  writeSavedCode,
+} from '@/lib/savedCode';
 
 interface CodeEditorProps {
   initialCode: string;
@@ -23,21 +30,6 @@ interface TestResult {
   actualOutput: string;
   error?: string;
   description?: string;
-}
-
-// Шаблон сохраняем рядом с кодом, чтобы отличать «ученик ничего не менял»
-// от «ученик написал решение». Первое можно выбросить при смене шаблона,
-// второе — никогда.
-const codeKey = (id: number) => `task_${id}_code`;
-const tplKey = (id: number) => `task_${id}_tpl`;
-
-// Кэши, оставшиеся до появления tplKey, несут код без отметки шаблона.
-// Из них безопасно выбросить только заведомо нерабочие: без return, printf
-// и exit код не проходит ни одного теста ни на одной из задач. Остальное
-// может быть настоящей работой — оставляем.
-function isDeadLegacyCode(src: string): boolean {
-  const stripped = src.replace(/\/\/[^\n]*/g, '');
-  return !/\b(return|printf|puts|putchar|exit)\b/.test(stripped);
 }
 
 // Предупреждения gcc. Код собрался и может даже проходить тесты, но это
@@ -86,31 +78,25 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
   const [isCustomRunning, setIsCustomRunning] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'saved' | 'unsaved' | 'saving'>('saved');
 
-  // Загрузка сохранённого кода при монтировании
+  // Загрузка сохранённого кода при монтировании.
+  // Шаблон сохранён рядом с кодом, чтобы отличать «ученик ничего не менял»
+  // от «ученик написал решение»: первое можно выбросить при смене шаблона,
+  // второе — никогда.
   useEffect(() => {
     if (!taskId) return;
-    let saved: string | null;
-    let savedTpl: string | null;
-    try {
-      saved = localStorage.getItem(codeKey(taskId));
-      savedTpl = localStorage.getItem(tplKey(taskId));
-    } catch {
-      return; // приватный режим или заблокированное хранилище — работаем без него
-    }
+    const saved = readSavedCode(taskId);
     if (!saved) return;
+    const savedTpl = readSavedTemplate(taskId);
 
     if (savedTpl === null) {
       // старый кэш без отметки шаблона
       if (isDeadLegacyCode(saved)) {
-        try { localStorage.removeItem(codeKey(taskId)); } catch { /* не критично */ }
+        clearSavedCode(taskId);
         return;
       }
     } else if (saved === savedTpl) {
       // шаблон не правили, а сам он мог устареть — берём текущий
-      try {
-        localStorage.removeItem(codeKey(taskId));
-        localStorage.removeItem(tplKey(taskId));
-      } catch { /* не критично */ }
+      clearSavedCode(taskId);
       return;
     }
 
@@ -123,10 +109,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
     if (taskId && code !== initialCode) {
       setSaveStatus('unsaved');
       const timer = setTimeout(() => {
-        try {
-          localStorage.setItem(codeKey(taskId), code);
-          localStorage.setItem(tplKey(taskId), initialCode);
-        } catch { /* хранилище недоступно — просто не сохраняем */ }
+        writeSavedCode(taskId, code, initialCode);
         setSaveStatus('saved');
       }, 1000); // Сохранение через 1 секунду после последнего изменения
 
@@ -137,12 +120,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
   const resetCode = () => {
     if (confirm('Вы уверены, что хотите сбросить код к начальному шаблону? Все изменения будут потеряны.')) {
       setCode(initialCode);
-      if (taskId) {
-        try {
-          localStorage.removeItem(codeKey(taskId));
-          localStorage.removeItem(tplKey(taskId));
-        } catch { /* не критично */ }
-      }
+      if (taskId) clearSavedCode(taskId);
       setSaveStatus('saved');
     }
   };
