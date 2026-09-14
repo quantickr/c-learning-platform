@@ -58,6 +58,21 @@ function WarningBox({ text }: { text: string }) {
   );
 }
 
+// Сервер отвечает внятной причиной в теле (в том числе 429 от rate limit в
+// middleware.ts), но axios бросает исключение на любом статусе вне 2xx.
+// Без разборки ученик видит «Ошибка подключения к серверу» даже тогда,
+// когда сервер жив и просто попросил подождать минуту.
+function describeRequestError(error: unknown): string {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data as { error?: unknown } | undefined;
+    const message = typeof data?.error === 'string' ? data.error.trim() : '';
+    if (message) return `Ошибка:\n${message}`;
+    if (error.response) return `Ошибка:\nСервер ответил ${error.response.status}`;
+    if (error.code === 'ECONNABORTED') return 'Ошибка:\nСервер не ответил вовремя';
+  }
+  return 'Ошибка подключения к серверу';
+}
+
 export default function CodeEditor({ initialCode, taskId, mainFunction, tests, onSuccess }: CodeEditorProps) {
   const [code, setCode] = useState(initialCode);
   const [isRunning, setIsRunning] = useState(false);
@@ -169,7 +184,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
         setCustomOutput(`Ошибка:\n${response.data.error}`);
       }
     } catch (error) {
-      setCustomOutput('Ошибка подключения к серверу');
+      setCustomOutput(describeRequestError(error));
     }
 
     setIsCustomRunning(false);
@@ -222,9 +237,12 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
           input: test.input,
           expectedOutput: test.expectedOutput,
           actualOutput: '',
-          error: 'Ошибка подключения к серверу',
+          error: describeRequestError(error),
           description: test.description
         });
+        // 429 от rate limit: остальные запросы упрутся в тот же лимит,
+        // добивать сервер бессмысленно — прерываемся и показываем причину
+        if (axios.isAxiosError(error) && error.response?.status === 429) break;
       }
     }
 
@@ -232,8 +250,9 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
     setTestWarning(warning);
     setIsRunning(false);
 
-    // Проверяем, все ли тесты прошли
-    const allPassed = results.every(r => r.passed);
+    // Проверяем, все ли тесты прошли. Прогон мог прерваться на 429, поэтому
+    // «пройдено» требует ещё и полного количества результатов.
+    const allPassed = results.length === tests.length && results.every(r => r.passed);
     const passedTests = results.filter(r => r.passed).length;
 
     // Сохраняем прогресс
@@ -241,7 +260,7 @@ export default function CodeEditor({ initialCode, taskId, mainFunction, tests, o
       await axios.post('/api/progress', {
         taskId,
         passed: allPassed,
-        testsTotal: results.length,
+        testsTotal: tests.length,
         testsPassed: passedTests
       });
     } catch (error) {

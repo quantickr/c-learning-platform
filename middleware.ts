@@ -49,9 +49,12 @@ function getClientIP(request: NextRequest): string {
   return 'anonymous';
 }
 
-function rateLimit(ip: string, limit: number, windowMs: number): boolean {
+// Ключ — не голый IP, а `${ip}:${область}`: у чата и у компиляции разные
+// лимиты, и на общем счётчике десяток прогонов тестов молча блокировал бы
+// ещё и ассистента.
+function rateLimit(key: string, limit: number, windowMs: number): boolean {
   const now = Date.now();
-  const record = rateLimitMap.get(ip);
+  const record = rateLimitMap.get(key);
 
   if (!record || now > record.resetTime) {
     // Защита от memory exhaustion - LRU eviction при превышении лимита
@@ -62,7 +65,7 @@ function rateLimit(ip: string, limit: number, windowMs: number): boolean {
       }
     }
 
-    rateLimitMap.set(ip, { count: 1, resetTime: now + windowMs });
+    rateLimitMap.set(key, { count: 1, resetTime: now + windowMs });
     return true;
   }
 
@@ -81,7 +84,7 @@ export function middleware(request: NextRequest) {
   // Rate limiting для API чата
   if (pathname === '/api/chat') {
     // 10 запросов в минуту на IP
-    if (!rateLimit(ip, 10, 60 * 1000)) {
+    if (!rateLimit(`${ip}:chat`, 10, 60 * 1000)) {
       return NextResponse.json(
         {
           success: false,
@@ -94,8 +97,10 @@ export function middleware(request: NextRequest) {
 
   // Rate limiting для компиляции кода
   if (pathname.startsWith('/api/compile')) {
-    // 30 запросов в минуту на IP (тесты могут запускаться часто)
-    if (!rateLimit(ip, 30, 60 * 1000)) {
+    // 120 запросов в минуту на IP. Один прогон тестов — это один запрос на
+    // тест: в самой длинной задаче их 18, так что прежние 30 в минуту
+    // кончались на втором запуске подряд и ученик получал 429 посреди проверки.
+    if (!rateLimit(`${ip}:compile`, 120, 60 * 1000)) {
       return NextResponse.json(
         {
           success: false,
